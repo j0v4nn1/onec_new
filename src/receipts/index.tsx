@@ -1,16 +1,15 @@
 import { Container, Nav, Navbar, Table } from 'react-bootstrap';
-import { nomenclature as parts } from '../data';
+import { receipts } from '../data';
 
-const Nomenclature = () => {
-  const tables = parts.map(({ id, nomenclature, quantity, unit, price }) => {
+const Receipts = () => {
+  const tables = receipts.map(({ id, date, vendor, receiver, counterparty }) => {
     return (
       <tr key={id}>
         <td>{id}</td>
-        <td>{nomenclature}</td>
-        <td>{quantity}</td>
-        <td>{unit}</td>
-        <td>{price}</td>
-        <td>{price * quantity}</td>
+        <td>{vendor}</td>
+        <td>{counterparty}</td>
+        <td>{date}</td>
+        <td>{receiver}</td>
       </tr>
     );
   });
@@ -33,12 +32,11 @@ const Nomenclature = () => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>Номер</th>
-            <th>Номенклатура</th>
-            <th>Количество</th>
-            <th>Единица измерения</th>
-            <th>Цена</th>
-            <th>Сумма</th>
+            <th>Номер поступления</th>
+            <th>Поставщик</th>
+            <th>Контрагент</th>
+            <th>Дата приёмки</th>
+            <th>Кто принял</th>
           </tr>
         </thead>
         <tbody>{tables}</tbody>
@@ -47,4 +45,4 @@ const Nomenclature = () => {
   );
 };
 
-export default Nomenclature;
+export default Receipts;

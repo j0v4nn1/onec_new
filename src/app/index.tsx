@@ -1,9 +1,9 @@
-import NavBarReact from '../navbar/navbar';
+import NavBarReact from '../navbar';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Orders from '../orders/orders';
-import Welcome from '../welcome/welcome.tsx';
-import Receipts from '../receipts/receipts.tsx';
-import Nomenclature from '../nomenclature/nomenclature.tsx';
+import Orders from '../orders';
+import Welcome from '../welcome';
+import Receipts from '../receipts';
+import Nomenclature from '../nomenclature';
 const App = () => {
   return (
     <BrowserRouter>
