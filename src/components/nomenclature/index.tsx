@@ -1,5 +1,5 @@
 import { Container, Nav, Navbar, Table } from 'react-bootstrap';
-import { nomenclature as parts } from '../data';
+import { nomenclature as parts } from '../../data';
 
 const Nomenclature = () => {
   const tables = parts.map(({ id, nomenclature, quantity, unit, price }) => {

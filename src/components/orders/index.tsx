@@ -1,15 +1,17 @@
-import { Container, Nav, Navbar, Table } from 'react-bootstrap';
-import { receipts } from '../data';
+import Table from 'react-bootstrap/Table';
+import { orders } from '../../data';
+import { Container, Nav, Navbar } from 'react-bootstrap';
 
-const Receipts = () => {
-  const tables = receipts.map(({ id, date, vendor, receiver, counterparty }) => {
+const Orders = () => {
+  const tables = orders.map(({ id, car, client, master, number, date }) => {
     return (
       <tr key={id}>
         <td>{id}</td>
-        <td>{vendor}</td>
-        <td>{counterparty}</td>
+        <td>{car}</td>
+        <td>{number}</td>
+        <td>{client}</td>
+        <td>{master}</td>
         <td>{date}</td>
-        <td>{receiver}</td>
       </tr>
     );
   });
@@ -32,11 +34,12 @@ const Receipts = () => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>Номер поступления</th>
-            <th>Поставщик</th>
-            <th>Контрагент</th>
-            <th>Дата приёмки</th>
-            <th>Кто принял</th>
+            <th>Номер заказ-наряда</th>
+            <th>Модель автомобиля</th>
+            <th>Номер автомобиля</th>
+            <th>ФИО клиента</th>
+            <th>Ведёт мастер</th>
+            <th>Дата</th>
           </tr>
         </thead>
         <tbody>{tables}</tbody>
@@ -44,5 +47,4 @@ const Receipts = () => {
     </>
   );
 };
-
-export default Receipts;
+export default Orders;
