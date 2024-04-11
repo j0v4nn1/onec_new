@@ -56,9 +56,6 @@ function NavBarReact() {
             <Form.Control type="search" placeholder="Поиск" className="me-2" aria-label="Search" />
             <Button variant="outline-success">Найти</Button>
           </Form>
-          <Nav>
-            <Nav.Link href="#deets">Авторизоваться</Nav.Link>
-          </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>

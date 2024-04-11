@@ -16,7 +16,6 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "noImplicitAny": true,
-    "allowImportingTsExtensions": true,
     "baseUrl": "src/"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/pages/profile/index.jsx"],

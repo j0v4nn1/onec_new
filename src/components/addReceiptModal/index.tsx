@@ -16,38 +16,30 @@ import { useState } from 'react';
 import styles from './index.module.css';
 import AddProviderModal from 'components/addProviderModal';
 import AddDocumentModal from 'components/addDocumentModal';
-import { Props } from './index.types';
-import { Receipt } from 'service/slices/receipts/index.types';
-import { generateVendor } from 'utils';
 
-const ReceiptDetails = ({ _id }: Props) => {
+const AddReceiptModal = () => {
   const dispatch = useAppDispatch();
-  const receipt = useAppSelector((store) =>
-    store.receipts.receipts.find((receipt) => receipt._id === _id)
-  ) as Receipt;
-  const [vendor, setVendor] = useState(generateVendor(receipt.store));
-  const [warehouse, setWarehouse] = useState(receipt.store);
+  const { receipts } = useAppSelector((store) => store.receipts);
+  const { provider, contract } = useAppSelector((store) => store.receipts.newReceipt);
+  const receiptNumber = receipts[receipts.length - 1].number;
+  const [vendor, setVendor] = useState('Аларм-моторс Озерки');
+  const [warehouse, setWarehouse] = useState('Выберите склад');
   const [isProviderModalShowed, setIsProviderModalShowed] = useState(false);
   const [isDocumentModalShowed, setIsDocumentModalShowed] = useState(false);
-  const [documentInput, setDocumentInput] = useState(receipt.document);
-  const [invoiceInput, setInvoiceInput] = useState(receipt.invoice);
+  const [documentInput, setDocumentInput] = useState('');
+  const [invoiceInput, setInvoiceInput] = useState('');
   const [isVATnull, setIsVATnull] = useState(false);
   const { isOpen } = useAppSelector((store) => store.modal);
-
   const closeModal = () => {
     dispatch(closeModalAction());
   };
-
-  const generateVAT = () => {
-    switch (receipt.vat) {
-      case 20:
-        return 'НДС сверху 20%';
-      case 10:
-        return 'НДС сверху 10%';
-      case 0:
-        return 'Без налога';
-    }
-  };
+  const today = new Date();
+  const day = today.getDate();
+  const month = today.getMonth() + 1;
+  const year = today.getFullYear().toString().slice(-2);
+  const formattedDay = day < 10 ? '0' + day : day;
+  const formattedMonth = month < 10 ? '0' + month : month;
+  const formattedDate = `${formattedDay}.${formattedMonth}.${year}`;
 
   const generateWarehouses = (vendor: string) => {
     switch (vendor) {
@@ -98,7 +90,7 @@ const ReceiptDetails = ({ _id }: Props) => {
     }
   };
 
-  return receipt ? (
+  return (
     <ModalBootstrap
       fullscreen={true}
       onHide={closeModal}
@@ -108,11 +100,8 @@ const ReceiptDetails = ({ _id }: Props) => {
       centered>
       <ModalBootstrap.Header closeButton>
         <ModalBootstrap.Title id="contained-modal-title-vcenter">
-          Поступление товаров -{' '}
-          {receipt.number && receipt.number < 10
-            ? `С0000460${receipt.number}`
-            : `С000046${receipt.number}`}{' '}
-          от {receipt.date}
+          Поступление товаров - С000046{receiptNumber !== null && receiptNumber + 1} от{' '}
+          {formattedDate}
         </ModalBootstrap.Title>
       </ModalBootstrap.Header>
       <ModalBootstrap.Body>
@@ -155,7 +144,7 @@ const ReceiptDetails = ({ _id }: Props) => {
           <Row>
             <Col xs={1}>Поставщик:</Col>
             <Col xs={2}>
-              <Form.Control placeholder={receipt.provider.name} size="sm" type="text" disabled />
+              <Form.Control placeholder={provider.name} size="sm" type="text" disabled />
             </Col>
             <Col xs={1}>
               <Button onClick={() => setIsProviderModalShowed(true)} size="sm">
@@ -175,14 +164,7 @@ const ReceiptDetails = ({ _id }: Props) => {
             </Col>
             <Col xs={2}>
               <div style={{ display: 'flex', justifyContent: 'space-between', maxWidth: '146px' }}>
-                от{' '}
-                <input
-                  value={receipt.docdate}
-                  readOnly
-                  className={styles.date}
-                  type="date"
-                  name="calendar"
-                />
+                от <input className={styles.date} type="date" name="calendar" />
               </div>
             </Col>
             <Col xs={2}>Налог:</Col>
@@ -190,10 +172,11 @@ const ReceiptDetails = ({ _id }: Props) => {
           <Row className="mt-3">
             <Col xs={1}>Документ:</Col>
             <Col xs={2}>
-              <Form.Control value={receipt.contract} size="sm" type="text" disabled />
+              <Form.Control value={contract} size="sm" type="text" disabled />
             </Col>
             <Col xs={1}>
               <Button
+                disabled={provider.name === ''}
                 onClick={() => {
                   setIsDocumentModalShowed(true);
                 }}
@@ -214,14 +197,7 @@ const ReceiptDetails = ({ _id }: Props) => {
             </Col>
             <Col xs={2}>
               <div style={{ display: 'flex', justifyContent: 'space-between', maxWidth: '146px' }}>
-                от{' '}
-                <input
-                  value={receipt.vat === 0 ? '' : receipt.docdate}
-                  readOnly
-                  className={styles.date}
-                  type="date"
-                  name="calendar"
-                />
+                от <input className={styles.date} type="date" name="calendar" />
               </div>
             </Col>
             <Col xs={2}>
@@ -234,7 +210,7 @@ const ReceiptDetails = ({ _id }: Props) => {
                   }
                 }}
                 size="sm"
-                defaultValue={generateVAT()}>
+                defaultValue={'НДС сверху 20%'}>
                 <option>Без налога</option>
                 <option>НДС сверху 10%</option>
                 <option>НДС сверху 20%</option>
@@ -284,7 +260,7 @@ const ReceiptDetails = ({ _id }: Props) => {
         setIsDocumentModalShowed={setIsDocumentModalShowed}
       />
     </ModalBootstrap>
-  ) : null;
+  );
 };
 
-export default ReceiptDetails;
+export default AddReceiptModal;

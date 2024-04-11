@@ -1,13 +1,17 @@
+import { Provider } from '../general/index.types';
+
 export interface Receipt {
-  number: number;
+  _id: string;
+  number: number | null;
   type: string;
-  vendor: string;
+  provider: Provider;
   date: string;
-  contarct: string;
+  contract: string;
   document: string;
   invoice: string;
+  docdate: string;
   author: string;
-  uuid: string;
+  vat: number;
   total: number;
   store: string;
   time: string;
@@ -15,13 +19,15 @@ export interface Receipt {
 
 export interface jsonDataReceipts {
   status: 'success' | 'failure';
-  data: Receipt[];
+  result: Receipt[];
 }
 
 export interface ReceiptsState {
+  checkedReceiptId: string;
   receiptsRequest: boolean;
   loading: boolean;
   receiptsFailed: boolean;
   receipts: Receipt[];
   error: string | undefined;
+  newReceipt: Receipt;
 }

@@ -1,9 +1,12 @@
 import { Container, Nav, Navbar, Table } from 'react-bootstrap';
-import { getReceipts } from '../../service/slices/receipts';
+import { getReceipts, setCheckedReceiptId } from '../../service/slices/receipts';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'service/store/index.types';
+import { openModal as openModalAction } from 'service/slices/modal';
 import Spinner from 'react-bootstrap/Spinner';
 import styles from './index.module.css';
+import { ModalType } from 'service/slices/modal/index.types';
+import Form from 'react-bootstrap/Form';
 
 const Receipts = () => {
   const dispatch = useAppDispatch();
@@ -14,21 +17,36 @@ const Receipts = () => {
 
   const receipts = useAppSelector((store) => store.receipts.receipts);
   const loading = useAppSelector((store) => store.receipts.loading);
+  const openModal = (modalType: ModalType) => {
+    dispatch(openModalAction(modalType));
+  };
   const tables = receipts.map(
-    ({ number, date, vendor, author, type, total, store, time, invoice }) => {
+    ({ number, date, provider, author, type, total, store, time, invoice, _id }) => {
       return (
-        <tr key={number}>
-          <td>{date}</td>
-          <td>{type}</td>
-          <td>{number}</td>
-          <td>
-            {invoice} от {date}
+        <tr
+          key={_id}
+          onClick={() => {
+            dispatch(setCheckedReceiptId(_id));
+            openModal(ModalType.Receipt);
+          }}>
+          <td style={{ cursor: 'pointer' }}>
+            <Form>
+              <Form.Check checked readOnly></Form.Check>
+            </Form>
           </td>
-          <td>{vendor}</td>
-          <td>{store}</td>
-          <td>{total}</td>
-          <td>{author}</td>
-          <td>{time}</td>
+          <td style={{ cursor: 'pointer' }}>{date}</td>
+          <td style={{ cursor: 'pointer' }}>{type}</td>
+          <td style={{ cursor: 'pointer' }}>
+            {number !== null && number < 10 ? `С0000460${number}` : `С000046${number}`}
+          </td>
+          <td style={{ cursor: 'pointer' }}>
+            {invoice === 'Без СФ' ? invoice : `${invoice} от ${date}`}
+          </td>
+          <td style={{ cursor: 'pointer' }}>{provider.name}</td>
+          <td style={{ cursor: 'pointer' }}>{store}</td>
+          <td style={{ cursor: 'pointer' }}>{total}</td>
+          <td style={{ cursor: 'pointer' }}>{author}</td>
+          <td style={{ cursor: 'pointer' }}>{time}</td>
         </tr>
       );
     }
@@ -50,7 +68,7 @@ const Receipts = () => {
         <Container fluid>
           <Navbar.Collapse id="navbarScroll">
             <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
-              <Nav.Link>Добавить</Nav.Link>
+              <Nav.Link onClick={() => openModal(ModalType.Arrival)}>Добавить</Nav.Link>
               <Nav.Link>Удалить</Nav.Link>
               <Nav.Link href="#" disabled>
                 Изменить
@@ -62,15 +80,16 @@ const Receipts = () => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>Дата</th>
-            <th>Документ</th>
-            <th>Номер</th>
-            <th>СФ</th>
-            <th>Поставщик</th>
-            <th>Место хранения</th>
-            <th>Всего</th>
-            <th>Автор</th>
-            <th>Время</th>
+            <th style={{ textAlign: 'center' }}>#</th>
+            <th style={{ textAlign: 'center' }}>Дата</th>
+            <th style={{ textAlign: 'center' }}>Документ</th>
+            <th style={{ textAlign: 'center' }}>Номер</th>
+            <th style={{ textAlign: 'center' }}>СФ</th>
+            <th style={{ textAlign: 'center' }}>Поставщик</th>
+            <th style={{ textAlign: 'center' }}>Место хранения</th>
+            <th style={{ textAlign: 'center' }}>Всего</th>
+            <th style={{ textAlign: 'center' }}>Автор</th>
+            <th style={{ textAlign: 'center' }}>Время</th>
           </tr>
         </thead>
         <tbody>{tables}</tbody>

@@ -319,6 +319,7 @@ export const nomenclature = [
     quantity: 5.0,
     unit: 'шт.',
     price: 2465.0,
+    SKU: 'TRW-GDB1702',
   },
   {
     id: 2,
@@ -326,6 +327,7 @@ export const nomenclature = [
     quantity: 1.0,
     unit: 'шт.',
     price: 953865.0,
+    SKU: 'FORD-DURATEC-2.0L',
   },
   {
     id: 3,
@@ -333,6 +335,7 @@ export const nomenclature = [
     quantity: 604.5,
     unit: 'л',
     price: 143.0,
+    SKU: 'CASTROL-EDGE-5W-30',
   },
   {
     id: 4,
@@ -340,6 +343,7 @@ export const nomenclature = [
     quantity: 3.0,
     unit: 'шт.',
     price: 155.0,
+    SKU: 'BOSCH-S4-001',
   },
   {
     id: 5,
@@ -347,6 +351,7 @@ export const nomenclature = [
     quantity: 24.0,
     unit: 'шт.',
     price: 130.0,
+    SKU: 'MICHELIN-PILOT-SPORT-4',
   },
   {
     id: 6,
@@ -354,6 +359,7 @@ export const nomenclature = [
     quantity: 2.0,
     unit: 'шт.',
     price: 180.0,
+    SKU: 'BREMBO-09.7705.11',
   },
   {
     id: 7,
@@ -361,6 +367,7 @@ export const nomenclature = [
     quantity: 1.0,
     unit: 'шт.',
     price: 173.0,
+    SKU: 'MANN-FILTER-C1717',
   },
   {
     id: 8,
@@ -368,6 +375,7 @@ export const nomenclature = [
     quantity: 45.0,
     unit: 'л',
     price: 90.0,
+    SKU: 'ZIC-G-05-45L',
   },
   {
     id: 9,
@@ -375,6 +383,7 @@ export const nomenclature = [
     quantity: 1.0,
     unit: 'шт.',
     price: 127.0,
+    SKU: 'GATES-T1567',
   },
   {
     id: 10,
@@ -382,6 +391,7 @@ export const nomenclature = [
     quantity: 1.0,
     unit: 'шт.',
     price: 7429.0,
+    SKU: 'HELLA-1LG-010-867-041',
   },
   {
     id: 11,
@@ -389,6 +399,7 @@ export const nomenclature = [
     quantity: 1.0,
     unit: 'шт.',
     price: 34784.0,
+    SKU: 'NISSENS-60790A',
   },
   {
     id: 12,
@@ -396,6 +407,7 @@ export const nomenclature = [
     quantity: 2.0,
     unit: 'шт.',
     price: 9437.0,
+    SKU: 'LEMFOERDER-30954-01',
   },
   {
     id: 13,
@@ -403,6 +415,7 @@ export const nomenclature = [
     quantity: 1.0,
     unit: 'шт.',
     price: 302.0,
+    SKU: 'BOSCH-0-580-314-139',
   },
   {
     id: 14,
@@ -410,5 +423,6 @@ export const nomenclature = [
     quantity: 4.0,
     unit: 'шт.',
     price: 674.0,
+    SKU: 'NGK-BKR6EIX-11',
   },
 ];
