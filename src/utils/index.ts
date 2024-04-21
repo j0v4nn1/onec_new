@@ -1,6 +1,5 @@
 import { jsonDataReceipts } from 'service/slices/receipts/index.types';
 import { API } from '../constants';
-import { jsonDataProviders } from 'service/slices/general/index.types';
 
 const checkResponse = (response: Response | Response[]) => {
   if (Array.isArray(response)) {
@@ -22,6 +21,15 @@ const checkResponse = (response: Response | Response[]) => {
 export const fetchReceipts = async (): Promise<jsonDataReceipts> => {
   const data = await fetch(`${API}/receipts`);
   return checkResponse(data);
+};
+
+export const generateDate = (today: Date) => {
+  const day = today.getDate();
+  const month = today.getMonth() + 1;
+  const year = today.getFullYear().toString().slice(-2);
+  const formattedDay = day < 10 ? '0' + day : day;
+  const formattedMonth = month < 10 ? '0' + month : month;
+  return `${formattedDay}.${formattedMonth}.${year}`;
 };
 
 export const getAllData = async () => {

@@ -1,12 +1,12 @@
 import { Product, Provider } from '../general/index.types';
 
-export interface Receipt {
+export type TReceipt = {
   _id: string;
   number: number | null;
-  type: string;
   provider: Provider;
   products: Product[];
   date: string;
+  vendor: string;
   contract: string;
   document: string;
   invoice: string;
@@ -16,19 +16,38 @@ export interface Receipt {
   total: number;
   store: string;
   time: string;
-}
+};
+
+export type TReceiptWithTempData = TReceipt & {
+  temporaryData: {
+    provider: {
+      activeProvider: Provider | null;
+      isActive: boolean;
+    };
+    contract: {
+      activeContract: string;
+      isActive: boolean;
+    };
+  };
+};
 
 export interface jsonDataReceipts {
   status: 'success' | 'failure';
-  result: Receipt[];
+  result: TReceipt[];
+}
+
+export enum ReceiptType {
+  NEW = 'new',
+  DETAILS = 'details',
 }
 
 export interface ReceiptsState {
-  checkedReceiptId: string;
+  receiptId: string;
+  receiptType: ReceiptType;
   receiptsRequest: boolean;
   loading: boolean;
   receiptsFailed: boolean;
-  receipts: Receipt[];
+  receipts: TReceipt[];
   error: string | undefined;
-  newReceipt: Receipt;
+  newReceipt: TReceiptWithTempData;
 }

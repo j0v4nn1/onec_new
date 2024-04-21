@@ -22,9 +22,9 @@ function NavBarReact() {
               }}>
               Поступления
             </NavLink>
-            <NavLink className="nav-link" to="#action2">
-              Перемещения
-            </NavLink>
+            {/*<NavLink className="nav-link" to="#action2">*/}
+            {/*  Перемещения*/}
+            {/*</NavLink>*/}
             <NavLink
               className="nav-link"
               to="/nomenclature"
@@ -41,9 +41,9 @@ function NavBarReact() {
               to="/orders">
               Журнал заказ-нарядов
             </NavLink>
-            <NavLink className="nav-link" to="#">
-              Счета
-            </NavLink>
+            {/*<NavLink className="nav-link" to="#">*/}
+            {/*  Счета*/}
+            {/*</NavLink>*/}
             <NavDropdown title="Оперативные" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3">Материальная ведомость</NavDropdown.Item>
               <NavDropdown.Item href="#action4">Отчёты</NavDropdown.Item>

@@ -1,13 +1,12 @@
 import { Container, Nav, Navbar, Table } from 'react-bootstrap';
-import { getReceipts, setCheckedReceiptId } from '../../service/slices/receipts';
+import { getReceipts, setReceiptId, setReceiptType } from '../../service/slices/receipts';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'service/store/index.types';
-import { openModal as openModalAction } from 'service/slices/modal';
 import Spinner from 'react-bootstrap/Spinner';
 import styles from '../../pages/receipts/index.module.css';
-import { ModalType } from 'service/slices/modal/index.types';
 import Form from 'react-bootstrap/Form';
 import { NavLink } from 'react-router-dom';
+import { ReceiptType } from '../../service/slices/receipts/index.types';
 
 const Receipts = () => {
   const dispatch = useAppDispatch();
@@ -16,27 +15,27 @@ const Receipts = () => {
     dispatch(getReceipts());
   }, []);
 
-  const receipts = useAppSelector((store) => store.receipts.receipts);
-  const loading = useAppSelector((store) => store.receipts.loading);
-  const openModal = (modalType: ModalType) => {
-    dispatch(openModalAction(modalType));
-  };
+  const { receipts, loading } = useAppSelector((store) => store.receipts);
+  const { receiptId } = useAppSelector((state) => state.receipts);
+
   const tables = receipts.map(
-    ({ number, date, provider, author, type, total, store, time, invoice, _id }) => {
+    ({ number, date, provider, author, total, store, time, invoice, _id }) => {
       return (
         <tr
           key={_id}
           onClick={() => {
-            dispatch(setCheckedReceiptId(_id));
-            openModal(ModalType.Receipt);
+            dispatch(setReceiptId(_id));
+            dispatch(setReceiptType(ReceiptType.DETAILS));
           }}>
           <td style={{ cursor: 'pointer' }}>
-            <Form>
-              <Form.Check checked readOnly></Form.Check>
-            </Form>
+            <Form.Check
+              type="radio"
+              checked={_id === receiptId}
+              name="receipt"
+              readOnly></Form.Check>
           </td>
           <td style={{ cursor: 'pointer' }}>{date}</td>
-          <td style={{ cursor: 'pointer' }}>{type}</td>
+          <td style={{ cursor: 'pointer' }}>Поступление товаров</td>
           <td style={{ cursor: 'pointer' }}>
             {number !== null && number < 10 ? `С0000460${number}` : `С000046${number}`}
           </td>
@@ -69,13 +68,23 @@ const Receipts = () => {
         <Container fluid>
           <Navbar.Collapse id="navbarScroll">
             <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
-              <NavLink className="nav-link" to="./add">
+              <NavLink
+                onClick={() => {
+                  dispatch(setReceiptType(ReceiptType.NEW));
+                }}
+                className="nav-link"
+                to="./add">
                 Добавить
               </NavLink>
               <Nav.Link>Удалить</Nav.Link>
-              <Nav.Link href="#" disabled>
+              <NavLink
+                onClick={() => {
+                  dispatch(setReceiptType(ReceiptType.DETAILS));
+                }}
+                className="nav-link"
+                to={`./${receiptId}`}>
                 Изменить
-              </Nav.Link>
+              </NavLink>
             </Nav>
           </Navbar.Collapse>
         </Container>

@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux';
 
-export type Document = {
+export type Contract = {
   _id: string;
   name: string;
 };
@@ -20,7 +20,7 @@ export type Provider = {
   taxid: number;
   crr: number;
   registered: string;
-  documents: Document[];
+  contracts: Contract[];
 };
 
 export type Brand = {

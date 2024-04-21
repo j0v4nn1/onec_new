@@ -1,8 +1,8 @@
 export enum ModalType {
-  Receipt = 'Receipt',
-  Transfer = 'Transfer',
+  Provider = 'Provider',
+  Product = 'Product',
   Auth = 'Auth',
-  Arrival = 'Arrival',
+  Contract = 'Contract',
 }
 
 export type ModalState = {

@@ -3,59 +3,55 @@ import {
   Col,
   Container,
   Form,
-  Modal as ModalBootstrap,
   Nav,
-  NavDropdown,
   Navbar,
+  NavDropdown,
   Row,
   Table,
 } from 'react-bootstrap';
-import { closeModal as closeModalAction } from 'service/slices/modal';
 import { useAppDispatch, useAppSelector } from 'service/store/index.types';
 import React, { useState } from 'react';
 import styles from './index.module.css';
-import AddProviderModal from 'components/addProviderModal';
-import AddDocumentModal from 'components/addDocumentModal';
-import AddProductToReceipt from '../../components/addProductToReceipt';
-import { Product } from '../../service/slices/general/index.types';
+import { generateDate } from '../../utils';
+import { ReceiptType, TReceipt } from '../../service/slices/receipts/index.types';
+import { openModal } from '../../service/slices/modal';
+import { ModalType } from '../../service/slices/modal/index.types';
+import ModalSwitch from '../../components/modalSwitch';
 
-const CreateReceipt = () => {
+const Receipt = () => {
   const dispatch = useAppDispatch();
-  const { receipts } = useAppSelector((store) => store.receipts);
+  const { receipts, receiptType, receiptId } = useAppSelector((store) => store.receipts);
+  const receipt = receipts.find((receipt) => {
+    return receipt._id === receiptId;
+  }) as TReceipt;
   const { provider, contract } = useAppSelector((store) => store.receipts.newReceipt);
   const receiptNumber = receipts[receipts.length - 1].number;
-  const [vendor, setVendor] = useState('Аларм-моторс Озерки');
-  const [warehouse, setWarehouse] = useState('Выберите склад');
-  const [isProviderModalShowed, setIsProviderModalShowed] = useState(false);
-  const [isDocumentModalShowed, setIsDocumentModalShowed] = useState(false);
-  const [isProductListModalShowed, setIsProductListModalShowed] = useState(false);
-  const [documentInput, setDocumentInput] = useState('');
-  const [activeProduct, setActiveProduct] = useState<Product | null>(null);
-  const [invoiceInput, setInvoiceInput] = useState('');
-  const [isVATnull, setIsVATnull] = useState(false);
-  const { isOpen } = useAppSelector((store) => store.modal);
-  const closeModal = () => {
-    dispatch(closeModalAction());
-  };
   const { products } = useAppSelector((state) => state.receipts.newReceipt);
   const today = new Date();
-  const day = today.getDate();
-  const month = today.getMonth() + 1;
-  const year = today.getFullYear().toString().slice(-2);
-  const formattedDay = day < 10 ? '0' + day : day;
-  const formattedMonth = month < 10 ? '0' + month : month;
-  const formattedDate = `${formattedDay}.${formattedMonth}.${year}`;
+
+  const [vendor, setVendor] = useState(
+    receiptType === ReceiptType.NEW ? 'Аларм-моторс Озерки' : receipt.vendor
+  );
+  const [warehouse, setWarehouse] = useState(
+    receiptType === ReceiptType.NEW ? 'Выберите склад' : receipt.store
+  );
+  const [documentInput, setDocumentInput] = useState(
+    receiptType === ReceiptType.NEW ? '' : receipt.document
+  );
+  const [invoiceInput, setInvoiceInput] = useState(
+    receiptType === ReceiptType.NEW ? '' : receipt.invoice
+  );
+  const [documentDate, setDocumentDate] = useState(
+    receiptType === ReceiptType.NEW ? '' : receipt.docdate
+  );
+  const [vat, setVat] = useState(receiptType === ReceiptType.NEW ? 1.2 : receipt.vat);
+  const [isVATnull, setIsVATnull] = useState(false);
 
   const productsList = products.map((product) => {
     return (
       <tr>
         <td>
-          <Form.Check
-            readOnly
-            checked={activeProduct?.uniqueListId === product.uniqueListId}
-            type="radio"
-            name="productInReceipt"
-          />
+          <Form.Check readOnly type="radio" name="productInReceipt" />
         </td>
         <td>{product.sku}</td>
         <td>{product.name}</td>
@@ -123,7 +119,7 @@ const CreateReceipt = () => {
     <section className="p-3 pb-0">
       <h4>
         Поступление товаров - С000046{receiptNumber !== null && receiptNumber + 1} от{' '}
-        {formattedDate}
+        {generateDate(today)}
       </h4>
       <h5 style={{ maxWidth: '250px' }}>
         <NavDropdown title={vendor} menuVariant="dark">
@@ -166,10 +162,19 @@ const CreateReceipt = () => {
             Поставщик:
           </Col>
           <Col xs={2}>
-            <Form.Control placeholder={provider.name} size="sm" type="text" disabled />
+            <Form.Control
+              value={receiptType === ReceiptType.NEW ? provider.name : receipt.provider.name}
+              size="sm"
+              type="text"
+              disabled
+            />
           </Col>
           <Col xs={1}>
-            <Button onClick={() => setIsProviderModalShowed(true)} size="sm">
+            <Button
+              onClick={() => {
+                dispatch(openModal(ModalType.Provider));
+              }}
+              size="sm">
               Выбрать
             </Button>
           </Col>
@@ -186,7 +191,16 @@ const CreateReceipt = () => {
           </Col>
           <Col xs={2}>
             <div style={{ display: 'flex', justifyContent: 'space-between', maxWidth: '146px' }}>
-              от <input className={styles.date} type="date" name="calendar" />
+              от{' '}
+              <input
+                onChange={(event) => {
+                  setDocumentDate(event.target.value);
+                }}
+                value={documentDate}
+                className={styles.date}
+                type="date"
+                name="calendar"
+              />
             </div>
           </Col>
           <Col xs={2}>Налог:</Col>
@@ -196,14 +210,19 @@ const CreateReceipt = () => {
             Документ:
           </Col>
           <Col xs={2}>
-            <Form.Control value={contract} size="sm" type="text" disabled />
+            <Form.Control
+              value={receiptType === ReceiptType.NEW ? contract : receipt.contract}
+              size="sm"
+              type="text"
+              disabled
+            />
           </Col>
           <Col xs={1}>
             <Button
-              disabled={provider.name === ''}
               onClick={() => {
-                setIsDocumentModalShowed(true);
+                dispatch(openModal(ModalType.Contract));
               }}
+              disabled={provider.name === ''}
               size="sm">
               Выбрать
             </Button>
@@ -221,12 +240,22 @@ const CreateReceipt = () => {
           </Col>
           <Col xs={2}>
             <div style={{ display: 'flex', justifyContent: 'space-between', maxWidth: '146px' }}>
-              от <input className={styles.date} type="date" name="calendar" />
+              от{' '}
+              <input
+                onChange={(event) => {
+                  setDocumentDate(event.target.value);
+                }}
+                value={documentDate}
+                className={styles.date}
+                type="date"
+                name="calendar"
+              />
             </div>
           </Col>
           <Col xs={2}>
             <Form.Select
               onChange={(event) => {
+                setVat(+event.target.value);
                 if (event.target.value === 'Без налога') {
                   setIsVATnull(true);
                 } else {
@@ -234,10 +263,10 @@ const CreateReceipt = () => {
                 }
               }}
               size="sm"
-              defaultValue={'НДС сверху 20%'}>
-              <option>Без налога</option>
-              <option>НДС сверху 10%</option>
-              <option>НДС сверху 20%</option>
+              defaultValue={vat}>
+              <option value={1}>Без налога</option>
+              <option value={1.1}>НДС сверху 10%</option>
+              <option value={1.2}>НДС сверху 20%</option>
             </Form.Select>
           </Col>
         </Row>
@@ -246,12 +275,7 @@ const CreateReceipt = () => {
         <Container className="px-0" fluid>
           <Navbar.Collapse id="navbarScroll">
             <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
-              <Nav.Link
-                onClick={() => {
-                  setIsProductListModalShowed(true);
-                }}>
-                Добавить
-              </Nav.Link>
+              <Nav.Link>Добавить</Nav.Link>
               <Nav.Link>Удалить</Nav.Link>
               <Nav.Link disabled>Изменить</Nav.Link>
             </Nav>
@@ -275,8 +299,9 @@ const CreateReceipt = () => {
         </thead>
         <tbody>{productsList}</tbody>
       </Table>
+      <ModalSwitch />
     </section>
   );
 };
 
-export default CreateReceipt;
+export default Receipt;
