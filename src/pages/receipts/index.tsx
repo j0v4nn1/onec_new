@@ -4,9 +4,10 @@ import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'service/store/index.types';
 import { openModal as openModalAction } from 'service/slices/modal';
 import Spinner from 'react-bootstrap/Spinner';
-import styles from './index.module.css';
+import styles from '../../pages/receipts/index.module.css';
 import { ModalType } from 'service/slices/modal/index.types';
 import Form from 'react-bootstrap/Form';
+import { NavLink } from 'react-router-dom';
 
 const Receipts = () => {
   const dispatch = useAppDispatch();
@@ -68,7 +69,9 @@ const Receipts = () => {
         <Container fluid>
           <Navbar.Collapse id="navbarScroll">
             <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
-              <Nav.Link onClick={() => openModal(ModalType.Arrival)}>Добавить</Nav.Link>
+              <NavLink className="nav-link" to="./add">
+                Добавить
+              </NavLink>
               <Nav.Link>Удалить</Nav.Link>
               <Nav.Link href="#" disabled>
                 Изменить
