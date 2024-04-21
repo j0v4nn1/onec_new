@@ -1,8 +1,8 @@
-import { Button, Col, Form, ListGroup, Modal, Row, Table } from 'react-bootstrap';
+import { Button, Col, Form, Modal, Row, Table } from 'react-bootstrap';
 import { Props } from './index.types';
 import { useAppDispatch, useAppSelector } from 'service/store/index.types';
 import React, { useState } from 'react';
-import { addProvider } from 'service/slices/receipts';
+import { setProvider } from 'service/slices/receipts';
 import { Provider } from 'service/slices/general/index.types';
 
 const AddProviderModal = ({ isProviderModalShowed, setIsProviderModalShowed }: Props) => {
@@ -20,28 +20,21 @@ const AddProviderModal = ({ isProviderModalShowed, setIsProviderModalShowed }: P
 
   const providersList = searchResults(activeRadioButton).map((provider) => {
     return (
-      <ListGroup.Item
+      <tr
+        key={provider._id}
+        style={{ cursor: 'pointer' }}
         onClick={() => {
           setIsActiveProvider(true);
           setActiveProvider(provider);
-        }}
-        action
-        active={isActiveProvider && provider._id === activeProvider?._id}
-        key={provider._id}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              maxWidth: '430px',
-              width: '100%',
-            }}>
-            <div>{provider.name}</div>
-            <div>{provider.taxid}</div>
-          </div>
-          <div>{provider.crr}</div>
-        </div>
-      </ListGroup.Item>
+        }}>
+        <td>
+          <Form.Check name="provider" checked={activeProvider?._id === provider._id} type="radio" />
+        </td>
+        <td>{provider.name}</td>
+        <td>{provider.taxid}</td>
+        <td>{provider.crr}</td>
+        <td>{provider.registered}</td>
+      </tr>
     );
   });
 
@@ -65,7 +58,7 @@ const AddProviderModal = ({ isProviderModalShowed, setIsProviderModalShowed }: P
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Выбрать поставщика</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body style={{ overflow: 'hidden', overflowY: 'scroll', height: '450px' }}>
         <Row>
           <Col xs="auto">
             <Form.Control
@@ -85,7 +78,7 @@ const AddProviderModal = ({ isProviderModalShowed, setIsProviderModalShowed }: P
             style={{
               margin: 'auto',
               width: '100%',
-              maxWidth: '450px',
+              maxWidth: '350px',
             }}>
             <Form
               style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -122,19 +115,21 @@ const AddProviderModal = ({ isProviderModalShowed, setIsProviderModalShowed }: P
         <Table className="mt-3" striped bordered hover>
           <thead>
             <tr>
-              <th style={{ textAlign: 'center' }}>Имя</th>
-              <th style={{ textAlign: 'center' }}>ИНН</th>
-              <th style={{ textAlign: 'center' }}>КПП</th>
+              <th></th>
+              <th>Имя</th>
+              <th>ИНН</th>
+              <th>КПП</th>
+              <th>Юридический адрес</th>
             </tr>
           </thead>
+          <tbody>{providersList}</tbody>
         </Table>
-        <ListGroup className="mt-3">{providersList}</ListGroup>
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={closeModal}>Закрыть</Button>
         <Button
           onClick={() => {
-            activeProvider && dispatch(addProvider(activeProvider));
+            activeProvider && dispatch(setProvider(activeProvider));
             closeModal();
           }}
           disabled={!isActiveProvider}>

@@ -5,6 +5,15 @@ export type Document = {
   name: string;
 };
 
+export type Product = {
+  _id: string;
+  uniqueListId: string;
+  name: string;
+  brand: Brand;
+  sku: string;
+  unit: string;
+};
+
 export type Provider = {
   _id: string;
   name: string;
@@ -25,6 +34,7 @@ export type InitialState = {
   failed: boolean;
   providers: Provider[];
   brands: Brand[];
+  products: Product[];
   error: string | undefined;
 };
 

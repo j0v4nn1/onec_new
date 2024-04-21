@@ -1,10 +1,11 @@
-import { Provider } from '../general/index.types';
+import { Product, Provider } from '../general/index.types';
 
 export interface Receipt {
   _id: string;
   number: number | null;
   type: string;
   provider: Provider;
+  products: Product[];
   date: string;
   contract: string;
   document: string;

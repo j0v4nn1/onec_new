@@ -10,7 +10,6 @@ import { useAppDispatch, useAppSelector } from 'service/store/index.types';
 import { useEffect } from 'react';
 import { getData } from '../../service/slices/general';
 import ReceiptDetails from '../receiptDetails';
-import { getAllData } from 'utils';
 
 const App = () => {
   const modalType = useAppSelector((store) => store.modal.type);
@@ -18,7 +17,6 @@ const App = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    getAllData().then((data) => console.log(data));
     dispatch(getData());
   }, []);
 

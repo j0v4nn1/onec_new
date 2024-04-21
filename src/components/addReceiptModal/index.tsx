@@ -12,10 +12,12 @@ import {
 } from 'react-bootstrap';
 import { closeModal as closeModalAction } from 'service/slices/modal';
 import { useAppDispatch, useAppSelector } from 'service/store/index.types';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styles from './index.module.css';
 import AddProviderModal from 'components/addProviderModal';
 import AddDocumentModal from 'components/addDocumentModal';
+import AddProductToReceipt from '../addProductToReceipt';
+import { Product } from '../../service/slices/general/index.types';
 
 const AddReceiptModal = () => {
   const dispatch = useAppDispatch();
@@ -26,13 +28,16 @@ const AddReceiptModal = () => {
   const [warehouse, setWarehouse] = useState('Выберите склад');
   const [isProviderModalShowed, setIsProviderModalShowed] = useState(false);
   const [isDocumentModalShowed, setIsDocumentModalShowed] = useState(false);
+  const [isProductListModalShowed, setIsProductListModalShowed] = useState(false);
   const [documentInput, setDocumentInput] = useState('');
+  const [activeProduct, setActiveProduct] = useState<Product | null>(null);
   const [invoiceInput, setInvoiceInput] = useState('');
   const [isVATnull, setIsVATnull] = useState(false);
   const { isOpen } = useAppSelector((store) => store.modal);
   const closeModal = () => {
     dispatch(closeModalAction());
   };
+  const { products } = useAppSelector((state) => state.receipts.newReceipt);
   const today = new Date();
   const day = today.getDate();
   const month = today.getMonth() + 1;
@@ -40,6 +45,30 @@ const AddReceiptModal = () => {
   const formattedDay = day < 10 ? '0' + day : day;
   const formattedMonth = month < 10 ? '0' + month : month;
   const formattedDate = `${formattedDay}.${formattedMonth}.${year}`;
+
+  const productsList = products.map((product) => {
+    return (
+      <tr>
+        <td>
+          <Form.Check
+            readOnly
+            checked={activeProduct?.uniqueListId === product.uniqueListId}
+            type="radio"
+            name="productInReceipt"
+          />
+        </td>
+        <td>{product.sku}</td>
+        <td>{product.name}</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    );
+  });
 
   const generateWarehouses = (vendor: string) => {
     switch (vendor) {
@@ -222,7 +251,12 @@ const AddReceiptModal = () => {
           <Container fluid>
             <Navbar.Collapse id="navbarScroll">
               <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
-                <Nav.Link>Добавить</Nav.Link>
+                <Nav.Link
+                  onClick={() => {
+                    setIsProductListModalShowed(true);
+                  }}>
+                  Добавить
+                </Nav.Link>
                 <Nav.Link>Удалить</Nav.Link>
                 <Nav.Link disabled>Изменить</Nav.Link>
               </Nav>
@@ -244,7 +278,7 @@ const AddReceiptModal = () => {
               <th>Локация</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>{productsList}</tbody>
         </Table>
       </ModalBootstrap.Body>
       <ModalBootstrap.Footer>
@@ -258,6 +292,10 @@ const AddReceiptModal = () => {
       <AddDocumentModal
         isDocumentModalShowed={isDocumentModalShowed}
         setIsDocumentModalShowed={setIsDocumentModalShowed}
+      />
+      <AddProductToReceipt
+        isProductListModalShowed={isProductListModalShowed}
+        setIsProductListModalShowed={setIsProductListModalShowed}
       />
     </ModalBootstrap>
   );

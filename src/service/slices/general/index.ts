@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { Brand, InitialState, Provider, jsonDataArray } from './index.types';
+import { Brand, InitialState, Product, Provider } from './index.types';
 import { getAllData } from '../../../utils/';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
@@ -13,6 +13,7 @@ const initialState: InitialState = {
   failed: false,
   providers: [],
   brands: [],
+  products: [],
   error: undefined,
 };
 
@@ -32,12 +33,18 @@ const general = createSlice({
     });
     builder.addCase(
       getData.fulfilled,
-      (state, action: PayloadAction<[{ providers: Provider[] }, { brands: Brand[] }]>) => {
+      (
+        state,
+        action: PayloadAction<
+          [{ providers: Provider[] }, { brands: Brand[] }, { products: Product[] }]
+        >
+      ) => {
         const { providers } = action.payload[0];
         const { brands } = action.payload[1];
-        console.log(providers);
+        const { products } = action.payload[2];
         state.providers = providers.map((provider) => provider);
         state.brands = brands.map((brand) => brand);
+        state.products = products.map((product) => product);
         state.loading = false;
       }
     );

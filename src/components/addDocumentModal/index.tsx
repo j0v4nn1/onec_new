@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { addContractToProvider } from 'utils';
 import { Document, Provider } from 'service/slices/general/index.types';
 import { updateProviderDocument } from 'service/slices/general';
-import { addContract } from 'service/slices/receipts';
+import { setContract } from 'service/slices/receipts';
 
 const AddDocumentModal = ({ isDocumentModalShowed, setIsDocumentModalShowed }: Props) => {
   const dispatch = useAppDispatch();
@@ -93,7 +93,7 @@ const AddDocumentModal = ({ isDocumentModalShowed, setIsDocumentModalShowed }: P
         <Button onClick={closeModal}>Закрыть</Button>
         <Button
           onClick={() => {
-            activeDocument && dispatch(addContract(activeDocument.name));
+            activeDocument && dispatch(setContract(activeDocument.name));
             closeModal();
           }}
           disabled={!isActiveDocument}>

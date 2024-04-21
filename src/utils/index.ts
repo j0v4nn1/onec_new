@@ -24,15 +24,11 @@ export const fetchReceipts = async (): Promise<jsonDataReceipts> => {
   return checkResponse(data);
 };
 
-export const fetchProviders = async (): Promise<jsonDataProviders> => {
-  const data = await fetch(`${API}/providers`);
-  return checkResponse(data);
-};
-
 export const getAllData = async () => {
   const providers = await fetch(`${API}/providers`);
   const brands = await fetch(`${API}/brands`);
-  return checkResponse([providers, brands]);
+  const products = await fetch(`${API}/products`);
+  return checkResponse([providers, brands, products]);
 };
 
 export const addContractToProvider = async (

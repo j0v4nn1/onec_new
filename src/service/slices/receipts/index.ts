@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { fetchReceipts } from '../../../utils';
 import { Receipt, ReceiptsState } from './index.types';
-import { Provider } from '../general/index.types';
+import { Product, Provider } from '../general/index.types';
 
 export const getReceipts = createAsyncThunk('receipts/fetchReceipts', async () => {
   const res = await fetchReceipts();
@@ -27,6 +27,7 @@ const initialState: ReceiptsState = {
       registered: '',
       documents: [],
     },
+    products: [],
     date: '',
     contract: '',
     document: '',
@@ -44,14 +45,17 @@ const receipts = createSlice({
   name: 'receipts',
   initialState,
   reducers: {
-    addProvider: (state, action: PayloadAction<Provider>) => {
+    setProvider: (state, action: PayloadAction<Provider>) => {
       state.newReceipt.provider = action.payload;
     },
-    addContract: (state, action: PayloadAction<string>) => {
+    setContract: (state, action: PayloadAction<string>) => {
       state.newReceipt.contract = action.payload;
     },
     setCheckedReceiptId: (state, action: PayloadAction<string>) => {
       state.checkedReceiptId = action.payload;
+    },
+    setProduct: (state, action: PayloadAction<Product>) => {
+      state.newReceipt.products.push(action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -75,6 +79,6 @@ const receipts = createSlice({
 
 const { reducer, actions } = receipts;
 
-export const { addProvider, addContract, setCheckedReceiptId } = actions;
+export const { setProvider, setContract, setCheckedReceiptId, setProduct } = actions;
 
 export default reducer;
