@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { Brand, InitialState, Product, Provider } from './index.types';
+import { TBrand, InitialState, TProduct, TProvider } from './index.types';
 import { getAllData } from '../../../utils/';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
@@ -21,7 +21,7 @@ const general = createSlice({
   name: 'general',
   initialState,
   reducers: {
-    updateProviderDocument: (state, action: PayloadAction<Provider>) => {
+    updateProviderDocument: (state, action: PayloadAction<TProvider>) => {
       const index = state.providers.findIndex((provider) => provider._id === action.payload._id);
       state.providers[index] = action.payload;
     },
@@ -33,12 +33,7 @@ const general = createSlice({
     });
     builder.addCase(
       getData.fulfilled,
-      (
-        state,
-        action: PayloadAction<
-          [{ providers: Provider[] }, { brands: Brand[] }, { products: Product[] }]
-        >
-      ) => {
+      (state, action: PayloadAction<[{ providers: TProvider[] }, { brands: TBrand[] }, { products: TProduct[] }]>) => {
         const { providers } = action.payload[0];
         const { brands } = action.payload[1];
         const { products } = action.payload[2];

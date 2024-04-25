@@ -1,29 +1,27 @@
-import { Provider } from 'react-redux';
-
-export type Contract = {
+export type TContract = {
   _id: string;
   name: string;
 };
 
-export type Product = {
+export type TProduct = {
   _id: string;
   uniqueListId: string;
   name: string;
-  brand: Brand;
+  brand: TBrand;
   sku: string;
   unit: string;
 };
 
-export type Provider = {
+export type TProvider = {
   _id: string;
   name: string;
   taxid: number;
   crr: number;
   registered: string;
-  contracts: Contract[];
+  contracts: TContract[];
 };
 
-export type Brand = {
+export type TBrand = {
   _id: string;
   name: string;
 };
@@ -32,22 +30,8 @@ export type InitialState = {
   request: boolean;
   loading: boolean;
   failed: boolean;
-  providers: Provider[];
-  brands: Brand[];
-  products: Product[];
+  providers: TProvider[];
+  brands: TBrand[];
+  products: TProduct[];
   error: string | undefined;
 };
-
-export type jsonDataArray = {
-  array: [providers: [], brands: []];
-};
-
-export interface jsonData {
-  providers: Provider[];
-  brands: Brand[];
-}
-
-export interface jsonDataProviders {
-  status: 'success';
-  data: Provider[];
-}

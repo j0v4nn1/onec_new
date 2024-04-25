@@ -1,14 +1,14 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { fetchReceipts } from '../../../utils';
-import { TReceipt, ReceiptsState, ReceiptType } from './index.types';
-import { Product, Provider } from '../general/index.types';
+import { TReceipt, TReceiptsState, ReceiptType, TNomenclatureProduct, TProductDetails } from './index.types';
+import { TProvider } from '../general/index.types';
 
 export const getReceipts = createAsyncThunk('receipts/fetchReceipts', async () => {
   const res = await fetchReceipts();
   return res.result;
 });
 
-const initialState: ReceiptsState = {
+const initialState: TReceiptsState = {
   receiptId: '',
   receiptType: ReceiptType.NEW,
   receiptsRequest: false,
@@ -25,6 +25,17 @@ const initialState: ReceiptsState = {
       contract: {
         activeContract: '',
         isActive: false,
+      },
+      product: {
+        activeProduct: '',
+        isActive: false,
+        productDetails: {
+          amount: '',
+          price: '',
+          country: '',
+          customDeclaration: '',
+          location: '',
+        },
       },
     },
     _id: '',
@@ -56,7 +67,7 @@ const receipts = createSlice({
   name: 'receipts',
   initialState,
   reducers: {
-    setProvider: (state, action: PayloadAction<Provider>) => {
+    setProvider: (state, action: PayloadAction<TProvider>) => {
       state.newReceipt.provider = action.payload;
     },
     setContract: (state, action: PayloadAction<string>) => {
@@ -68,10 +79,10 @@ const receipts = createSlice({
     setReceiptType: (state, action: PayloadAction<ReceiptType>) => {
       state.receiptType = action.payload;
     },
-    setProduct: (state, action: PayloadAction<Product>) => {
+    setProduct: (state, action: PayloadAction<TNomenclatureProduct>) => {
       state.newReceipt.products.push(action.payload);
     },
-    setActiveProvider: (state, action: PayloadAction<Provider | null>) => {
+    setActiveProvider: (state, action: PayloadAction<TProvider | null>) => {
       state.newReceipt.temporaryData.provider.activeProvider = action.payload;
     },
     setIsActiveProvider: (state, action: PayloadAction<boolean>) => {
@@ -82,6 +93,19 @@ const receipts = createSlice({
     },
     setIsActiveContract: (state, action: PayloadAction<boolean>) => {
       state.newReceipt.temporaryData.contract.isActive = action.payload;
+    },
+    setActiveProduct: (state, action: PayloadAction<string>) => {
+      state.newReceipt.temporaryData.product.activeProduct = action.payload;
+    },
+    setProductDetails: (state, action: PayloadAction<TProductDetails>) => {
+      state.newReceipt.temporaryData.product.productDetails = action.payload;
+    },
+    updateProductDetails: (state, action: PayloadAction<TNomenclatureProduct>) => {
+      const index = state.newReceipt.products.findIndex((product) => product._id === action.payload._id);
+      state.newReceipt.products[index] = action.payload;
+    },
+    deleteProduct: (state, action: PayloadAction<TNomenclatureProduct>) => {
+      state.newReceipt.products = state.newReceipt.products.filter((product) => product._id !== action.payload._id);
     },
   },
   extraReducers: (builder) => {
@@ -115,6 +139,10 @@ export const {
   setIsActiveProvider,
   setActiveContract,
   setIsActiveContract,
+  setActiveProduct,
+  setProductDetails,
+  updateProductDetails,
+  deleteProduct
 } = actions;
 
 export default reducer;

@@ -2,18 +2,16 @@ import { Button, Col, Form, Row, Table } from 'react-bootstrap';
 import { useAppDispatch, useAppSelector } from 'service/store/index.types';
 import React, { useState } from 'react';
 import { setActiveProvider, setIsActiveProvider } from 'service/slices/receipts';
-import { Provider } from 'service/slices/general/index.types';
+import { TProvider } from 'service/slices/general/index.types';
 
 const ProviderList = () => {
   const dispatch = useAppDispatch();
   const { providers } = useAppSelector((store) => store.general);
-  const { activeProvider } = useAppSelector(
-    (store) => store.receipts.newReceipt.temporaryData.provider
-  );
+  const { activeProvider } = useAppSelector((store) => store.receipts.newReceipt.temporaryData.provider);
   const [activeRadioButton, setActiveRadioButton] = useState<'name' | 'taxid' | 'crr'>('name');
   const [searchInput, setSearchInput] = useState('');
 
-  const searchResults = (filter: 'name' | 'taxid' | 'crr'): Provider[] =>
+  const searchResults = (filter: 'name' | 'taxid' | 'crr'): TProvider[] =>
     providers.filter((p) => {
       return p[filter].toString().toLowerCase().includes(searchInput.toLowerCase());
     });
@@ -28,12 +26,7 @@ const ProviderList = () => {
           dispatch(setActiveProvider(provider));
         }}>
         <td>
-          <Form.Check
-            readOnly
-            name="provider"
-            checked={activeProvider?._id === provider._id}
-            type="radio"
-          />
+          <Form.Check readOnly name="provider" checked={activeProvider?._id === provider._id} type="radio" />
         </td>
         <td>{provider.name}</td>
         <td>{provider.taxid}</td>

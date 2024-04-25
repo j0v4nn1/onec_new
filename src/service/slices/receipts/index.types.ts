@@ -1,10 +1,18 @@
-import { Product, Provider } from '../general/index.types';
+import { TProduct, TProvider } from '../general/index.types';
+
+export type TNomenclatureProduct = TProduct & {
+  price: number;
+  amount: number;
+  country: string;
+  customDeclaration: string;
+  location: string;
+};
 
 export type TReceipt = {
   _id: string;
   number: number | null;
-  provider: Provider;
-  products: Product[];
+  provider: TProvider;
+  products: TNomenclatureProduct[];
   date: string;
   vendor: string;
   contract: string;
@@ -18,30 +26,43 @@ export type TReceipt = {
   time: string;
 };
 
+export type TProductDetails = {
+  amount: string;
+  price: string;
+  country: string;
+  customDeclaration: string;
+  location: string;
+};
+
 export type TReceiptWithTempData = TReceipt & {
   temporaryData: {
     provider: {
-      activeProvider: Provider | null;
+      activeProvider: TProvider | null;
       isActive: boolean;
     };
     contract: {
       activeContract: string;
       isActive: boolean;
     };
+    product: {
+      activeProduct: string;
+      isActive: boolean;
+      productDetails: TProductDetails;
+    };
   };
 };
 
-export interface jsonDataReceipts {
+export type jsonDataReceipts = {
   status: 'success' | 'failure';
   result: TReceipt[];
-}
+};
 
 export enum ReceiptType {
   NEW = 'new',
   DETAILS = 'details',
 }
 
-export interface ReceiptsState {
+export type TReceiptsState = {
   receiptId: string;
   receiptType: ReceiptType;
   receiptsRequest: boolean;
@@ -50,4 +71,4 @@ export interface ReceiptsState {
   receipts: TReceipt[];
   error: string | undefined;
   newReceipt: TReceiptWithTempData;
-}
+};

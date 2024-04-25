@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from 'service/store/index.types';
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { addContractToProvider } from 'utils';
-import { Provider } from 'service/slices/general/index.types';
+import { TProvider } from 'service/slices/general/index.types';
 import { updateProviderDocument } from 'service/slices/general';
 import { setActiveContract, setIsActiveContract } from '../../service/slices/receipts';
 
@@ -11,9 +11,7 @@ const ContractList = () => {
   const dispatch = useAppDispatch();
   const { providers } = useAppSelector((store) => store.general);
   const { provider } = useAppSelector((store) => store.receipts.newReceipt);
-  const { activeContract, isActive } = useAppSelector(
-    (state) => state.receipts.newReceipt.temporaryData.contract
-  );
+  const { activeContract, isActive } = useAppSelector((state) => state.receipts.newReceipt.temporaryData.contract);
   const [documentInput, setDocumentInput] = useState('');
 
   const onChangeDocument = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,19 +43,14 @@ const ContractList = () => {
     <>
       <Row>
         <Col xs="auto">
-          <Form.Control
-            value={documentInput}
-            onChange={onChangeDocument}
-            type="text"
-            className=" mr-sm-2"
-          />
+          <Form.Control value={documentInput} onChange={onChangeDocument} type="text" className=" mr-sm-2" />
         </Col>
         <Col xs="auto">
           <Button
             onClick={() => {
               const _id = uuidv4();
               addContractToProvider(provider._id, { _id, name: documentInput })
-                .then((data: Provider) => {
+                .then((data: TProvider) => {
                   dispatch(updateProviderDocument(data));
                 })
                 .catch((err) => console.log(err))
