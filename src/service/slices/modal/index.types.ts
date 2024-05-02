@@ -6,12 +6,13 @@ export enum ModalType {
   Contract = 'Contract',
   ProductDetail = 'ProductDetail',
   Warning = 'Warning',
+  Saving = 'Saving',
 }
 
-export type Action = { payload: TNomenclatureProduct; type: string } | null;
+export type TAction = { payload: TNomenclatureProduct; type: string } | null;
 
 export type ModalState = {
   isOpen: boolean;
   type: ModalType | null;
-  action: Action;
+  action: TAction;
 };

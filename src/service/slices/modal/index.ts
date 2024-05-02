@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Action, ModalState, ModalType } from './index.types';
+import { TAction, ModalState, ModalType } from './index.types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: ModalState = {
@@ -20,7 +20,7 @@ const modal = createSlice({
       state.isOpen = false;
       state.type = null;
     },
-    setAction(state, action: PayloadAction<Action>) {
+    setAction(state, action: PayloadAction<TAction>) {
       state.action = action.payload;
     },
   },

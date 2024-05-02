@@ -1,4 +1,4 @@
-import { TProduct, TProvider } from '../general/index.types';
+import { TContract, TProduct, TProvider } from '../general/index.types';
 
 export type TNomenclatureProduct = TProduct & {
   price: number;
@@ -41,11 +41,10 @@ export type TReceiptWithTempData = TReceipt & {
       isActive: boolean;
     };
     contract: {
-      activeContract: string;
-      isActive: boolean;
+      activeContract: TContract | null;
     };
     product: {
-      activeProduct: string;
+      activeProduct: TProduct | null;
       isActive: boolean;
       productDetails: TProductDetails;
     };

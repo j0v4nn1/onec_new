@@ -39,10 +39,7 @@ export const getAllData = async () => {
   return checkResponse([providers, brands, products]);
 };
 
-export const addContractToProvider = async (
-  id: string,
-  contract: { _id: string; name: string }
-) => {
+export const addContractToProvider = async (id: string, contract: { _id: string; name: string }) => {
   const data = await fetch(`${API}/providers/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(contract),
@@ -53,12 +50,7 @@ export const addContractToProvider = async (
   return checkResponse(data);
 };
 
-export const addProduct = async (product: {
-  sku: string;
-  name: string;
-  brand: string;
-  unit: string;
-}) => {
+export const addProduct = async (product: { sku: string; name: string; brand: string; unit: string }) => {
   const data = await fetch(`${API}/products`, {
     method: 'POST',
     body: JSON.stringify(product),
@@ -80,27 +72,27 @@ export const addBrand = async (brand: string) => {
   return checkResponse(data);
 };
 
-export const generateVendor = (store: string) => {
-  switch (store) {
-    case 'З\\ч склад Exeed':
-      return 'Аларм-моторс Озерки';
-    case 'З\\ч склад Jaecoo':
-      return 'Аларм-моторс Озерки';
-    case 'З\\ч склад Omoda':
-      return 'Аларм-моторс Озерки';
-    case 'З\\ч склад Ford':
-      return 'Аларм-моторс Озерки';
-    case 'З\\ч склад Tank':
-      return 'Аларм-моторс Юго-запад';
-    case 'З\\ч склад Geely':
-      return 'Аларм-моторс Лахта';
-    case 'З\\ч склад Faw':
-      return 'Аларм-моторс Лахта';
-    case 'З\\ч склад Sollers':
-      return 'Аларм-моторс Лахта';
-    case 'З\\ч склад Mazda':
-      return 'Аларм-Комтранс';
-    default:
-      return 'Ошибка';
-  }
-};
+// export const generateVendor = (store: string) => {
+//   switch (store) {
+//     case 'З\\ч склад Exeed':
+//       return 'Аларм-моторс Озерки';
+//     case 'З\\ч склад Jaecoo':
+//       return 'Аларм-моторс Озерки';
+//     case 'З\\ч склад Omoda':
+//       return 'Аларм-моторс Озерки';
+//     case 'З\\ч склад Ford':
+//       return 'Аларм-моторс Озерки';
+//     case 'З\\ч склад Tank':
+//       return 'Аларм-моторс Юго-запад';
+//     case 'З\\ч склад Geely':
+//       return 'Аларм-моторс Лахта';
+//     case 'З\\ч склад Faw':
+//       return 'Аларм-моторс Лахта';
+//     case 'З\\ч склад Sollers':
+//       return 'Аларм-моторс Лахта';
+//     case 'З\\ч склад Mazda':
+//       return 'Аларм-Комтранс';
+//     default:
+//       return 'Ошибка';
+//   }
+// };

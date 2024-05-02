@@ -3,11 +3,9 @@ import { useAppDispatch, useAppSelector } from '../../service/store/index.types'
 import Form from 'react-bootstrap/Form';
 import { setActiveProduct } from '../../service/slices/receipts';
 
-const AddProductToReceipt = () => {
+const ProductList = () => {
   const { products } = useAppSelector((state) => state.general);
-  const { activeProduct } = useAppSelector(
-    (state) => state.receipts.newReceipt.temporaryData.product
-  );
+  const { activeProduct } = useAppSelector((state) => state.receipts.newReceipt.temporaryData.product);
   const dispatch = useAppDispatch();
 
   const productList = products.map((product) => {
@@ -15,14 +13,11 @@ const AddProductToReceipt = () => {
       <tr
         style={{ cursor: 'pointer' }}
         key={product._id}
-        onClick={() => dispatch(setActiveProduct(product._id))}>
+        onClick={() => {
+          dispatch(setActiveProduct(product));
+        }}>
         <td>
-          <Form.Check
-            readOnly
-            checked={activeProduct === product._id}
-            type="radio"
-            name="product"
-          />
+          <Form.Check readOnly checked={activeProduct?._id === product._id} type="radio" name="product" />
         </td>
         <td>{product.sku}</td>
         <td>{product.name}</td>
@@ -57,4 +52,4 @@ const AddProductToReceipt = () => {
   );
 };
 
-export default AddProductToReceipt;
+export default ProductList;

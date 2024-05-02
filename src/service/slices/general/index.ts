@@ -1,7 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { TBrand, InitialState, TProduct, TProvider } from './index.types';
 import { getAllData } from '../../../utils/';
-import type { PayloadAction } from '@reduxjs/toolkit';
 
 export const getData = createAsyncThunk('data/getData', async () => {
   return await getAllData();

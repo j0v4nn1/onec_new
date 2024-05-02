@@ -3,15 +3,15 @@ import { useAppDispatch, useAppSelector } from 'service/store/index.types';
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { addContractToProvider } from 'utils';
-import { TProvider } from 'service/slices/general/index.types';
+import { TContract, TProvider } from 'service/slices/general/index.types';
 import { updateProviderDocument } from 'service/slices/general';
-import { setActiveContract, setIsActiveContract } from '../../service/slices/receipts';
+import { setActiveContract } from '../../service/slices/receipts';
 
 const ContractList = () => {
   const dispatch = useAppDispatch();
   const { providers } = useAppSelector((store) => store.general);
   const { provider } = useAppSelector((store) => store.receipts.newReceipt);
-  const { activeContract, isActive } = useAppSelector((state) => state.receipts.newReceipt.temporaryData.contract);
+  const { activeContract } = useAppSelector((state) => state.receipts.newReceipt.temporaryData.contract);
   const [documentInput, setDocumentInput] = useState('');
 
   const onChangeDocument = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,11 +28,10 @@ const ContractList = () => {
       return (
         <ListGroup.Item
           onClick={() => {
-            dispatch(setIsActiveContract(true));
-            dispatch(setActiveContract(contract.name));
+            dispatch(setActiveContract(contract));
           }}
           action
-          active={isActive && contract.name === activeContract}
+          active={contract._id === activeContract?._id}
           key={contract._id}>
           {contract.name}
         </ListGroup.Item>

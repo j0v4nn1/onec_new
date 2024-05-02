@@ -9,10 +9,15 @@ type FormControlElement = HTMLInputElement | HTMLTextAreaElement;
 
 const ProductDetails = () => {
   const { activeProduct } = useAppSelector((state) => state.receipts.newReceipt.temporaryData.product);
+
   const product = useAppSelector((state) =>
-    state.receipts.newReceipt.products.find((product) => product._id === activeProduct)
+    state.receipts.newReceipt.products.find(
+      (product) => activeProduct && product.uniqueListId === activeProduct.uniqueListId
+    )
   ) as TNomenclatureProduct;
+
   const dispatch = useAppDispatch();
+
   const [state, setState] = useState<TProductDetails>({
     amount: product.amount.toString(),
     price: product.price.toString(),
@@ -20,15 +25,18 @@ const ProductDetails = () => {
     customDeclaration: product.customDeclaration,
     location: product.location,
   });
+
   useEffect(() => {
     dispatch(setProductDetails({ ...state }));
   }, [state]);
+
   const handleChange = (event: React.ChangeEvent<FormControlElement>, key: keyof typeof state) => {
     setState({
       ...state,
       [key]: event.target.value,
     });
   };
+
   return (
     <Form className="my-5">
       <Row>

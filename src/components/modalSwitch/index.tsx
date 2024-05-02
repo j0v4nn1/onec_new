@@ -3,7 +3,13 @@ import Modal from '../modal';
 import ProviderList from '../providerList';
 import ContractList from '../contractList';
 import { useDispatch } from 'react-redux';
-import { setActiveProvider, setContract, setProduct, setProvider, updateProductDetails } from '../../service/slices/receipts';
+import {
+  setActiveProvider,
+  setContract,
+  setProduct,
+  setProvider,
+  updateProductDetails,
+} from '../../service/slices/receipts';
 import { useAppSelector } from '../../service/store/index.types';
 import { closeModal } from '../../service/slices/modal';
 import ProductList from '../productList';
@@ -11,6 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { TProduct } from '../../service/slices/general/index.types';
 import ProductDetails from '../productDetails';
 import Warning from '../warning';
+import { TNomenclatureProduct } from 'service/slices/receipts/index.types';
 
 const ModalSwitch = () => {
   const { provider, contract } = useAppSelector((store) => store.receipts.newReceipt.temporaryData);
@@ -19,7 +26,9 @@ const ModalSwitch = () => {
   const { type } = useAppSelector((state) => state.modal);
   const { products } = useAppSelector((state) => state.general);
   const dispatch = useDispatch();
-  const product = products.find((product) => activeProduct === product._id) as TProduct;
+  const product = products.find(
+    (product) => activeProduct && activeProduct.uniqueListId === product.uniqueListId
+  ) as TNomenclatureProduct;
   const deleteProductAction = useAppSelector((state) => state.modal.action);
   return type === ModalType.Provider ? (
     <Modal
@@ -36,7 +45,7 @@ const ModalSwitch = () => {
     <Modal
       actionButtonText="Выбрать"
       action={() => {
-        contract.activeContract && dispatch(setContract(contract.activeContract));
+        contract.activeContract && dispatch(setContract(contract.activeContract.name));
         dispatch(closeModal());
       }}
       title={'Выбрать документ'}>
@@ -66,7 +75,14 @@ const ModalSwitch = () => {
     <Modal
       title={`Внесите данные для товара: ${product.name}`}
       action={() => {
-        dispatch(updateProductDetails({ ...product, ...productDetails, price: +productDetails.price, amount: +productDetails.amount }));
+        dispatch(
+          updateProductDetails({
+            ...product,
+            ...productDetails,
+            price: +productDetails.price,
+            amount: +productDetails.amount,
+          })
+        );
       }}
       actionButtonText="Сохранить">
       <ProductDetails />
@@ -75,12 +91,15 @@ const ModalSwitch = () => {
     <Modal
       title={`Удаление`}
       action={() => {
-        // @ts-ignore
-        dispatch(deleteProductAction);
+        deleteProductAction && dispatch(deleteProductAction);
         dispatch(closeModal());
       }}
       actionButtonText="Да">
-      <Warning />
+      <Warning text={'Вы точно хотите удалить товар?'} />
+    </Modal>
+  ) : type === ModalType.Saving ? (
+    <Modal title={`Сохранение`} action={() => {}} actionButtonText="Да">
+      <Warning text={'Вы точно хотите провести поступление'} />
     </Modal>
   ) : null;
 };

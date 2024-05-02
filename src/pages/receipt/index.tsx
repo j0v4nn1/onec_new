@@ -1,6 +1,6 @@
 import { Button, Col, Container, Form, Nav, Navbar, NavDropdown, Row, Table } from 'react-bootstrap';
 import { useAppDispatch, useAppSelector } from 'service/store/index.types';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from './index.module.css';
 import { generateDate } from '../../utils';
 import { ReceiptType, TNomenclatureProduct, TReceipt } from '../../service/slices/receipts/index.types';
@@ -19,10 +19,10 @@ const Receipt = () => {
   const today = new Date();
 
   const [vendor, setVendor] = useState(receiptType === ReceiptType.NEW ? 'Аларм-моторс Озерки' : receipt.vendor);
-  const [warehouse, setWarehouse] = useState(receiptType === ReceiptType.NEW ? 'Выберите склад' : receipt.store);
-  const [documentInput, setDocumentInput] = useState(receiptType === ReceiptType.NEW ? '' : receipt.document);
-  const [invoiceInput, setInvoiceInput] = useState(receiptType === ReceiptType.NEW ? '' : receipt.invoice);
-  const [documentDate, setDocumentDate] = useState(receiptType === ReceiptType.NEW ? '' : receipt.docdate);
+  const [store, setStore] = useState(receiptType === ReceiptType.NEW ? 'Выберите склад' : receipt.store);
+  const [document, setDocument] = useState(receiptType === ReceiptType.NEW ? '' : receipt.document);
+  const [invoice, setInvoice] = useState(receiptType === ReceiptType.NEW ? '' : receipt.invoice);
+  const [date, setDate] = useState(receiptType === ReceiptType.NEW ? '' : receipt.docdate);
   const [vat, setVat] = useState(receiptType === ReceiptType.NEW ? 0.2 : receipt.vat);
   const [activeProduct, setActiveProduct] = useState<TNomenclatureProduct | null>(null);
   const [isVATnull, setIsVATnull] = useState(false);
@@ -36,7 +36,12 @@ const Receipt = () => {
         style={{ cursor: 'pointer' }}
         key={product.uniqueListId}>
         <td>
-          <Form.Check checked={activeProduct?.uniqueListId === product.uniqueListId} readOnly type="radio" name="productInReceipt" />
+          <Form.Check
+            checked={activeProduct?.uniqueListId === product.uniqueListId}
+            readOnly
+            type="radio"
+            name="productInReceipt"
+          />
         </td>
         <td>{product.sku}</td>
         <td>{product.name}</td>
@@ -52,34 +57,34 @@ const Receipt = () => {
     );
   });
 
-  const generateWarehouses = (vendor: string) => {
+  const generatestores = (vendor: string) => {
     switch (vendor) {
       case 'Аларм-моторс Озерки':
         return (
-          <NavDropdown title={warehouse} menuVariant="dark">
-            <NavDropdown.Item onClick={() => setWarehouse('З\\ч склад Exeed')}>З\ч склад Exeed</NavDropdown.Item>
-            <NavDropdown.Item onClick={() => setWarehouse('З\\ч склад Omoda')}>З\ч склад Omoda</NavDropdown.Item>
-            <NavDropdown.Item onClick={() => setWarehouse('З\\ч склад Ford')}>З\ч склад Ford</NavDropdown.Item>
+          <NavDropdown title={store} menuVariant="dark">
+            <NavDropdown.Item onClick={() => setStore('З\\ч склад Exeed')}>З\ч склад Exeed</NavDropdown.Item>
+            <NavDropdown.Item onClick={() => setStore('З\\ч склад Omoda')}>З\ч склад Omoda</NavDropdown.Item>
+            <NavDropdown.Item onClick={() => setStore('З\\ч склад Ford')}>З\ч склад Ford</NavDropdown.Item>
           </NavDropdown>
         );
       case 'Аларм-моторс Юго-запад':
         return (
-          <NavDropdown title={warehouse} menuVariant="dark">
-            <NavDropdown.Item onClick={() => setWarehouse('З\\ч склад Tank')}>З\ч склад Tank</NavDropdown.Item>
+          <NavDropdown title={store} menuVariant="dark">
+            <NavDropdown.Item onClick={() => setStore('З\\ч склад Tank')}>З\ч склад Tank</NavDropdown.Item>
           </NavDropdown>
         );
       case 'Аларм-моторс Лахта':
         return (
-          <NavDropdown title={warehouse} menuVariant="dark">
-            <NavDropdown.Item onClick={() => setWarehouse('З\\ч склад Geely')}>З\ч склад Geely</NavDropdown.Item>
-            <NavDropdown.Item onClick={() => setWarehouse('З\\ч склад Faw')}>З\ч склад Faw</NavDropdown.Item>
-            <NavDropdown.Item onClick={() => setWarehouse('З\\ч склад Sollers')}>З\ч склад Sollers</NavDropdown.Item>
+          <NavDropdown title={store} menuVariant="dark">
+            <NavDropdown.Item onClick={() => setStore('З\\ч склад Geely')}>З\ч склад Geely</NavDropdown.Item>
+            <NavDropdown.Item onClick={() => setStore('З\\ч склад Faw')}>З\ч склад Faw</NavDropdown.Item>
+            <NavDropdown.Item onClick={() => setStore('З\\ч склад Sollers')}>З\ч склад Sollers</NavDropdown.Item>
           </NavDropdown>
         );
       case 'Аларм-Комтранс':
         return (
-          <NavDropdown title={warehouse} menuVariant="dark">
-            <NavDropdown.Item onClick={() => setWarehouse('З\\ч склад Mazda')}>З\ч склад Mazda</NavDropdown.Item>
+          <NavDropdown title={store} menuVariant="dark">
+            <NavDropdown.Item onClick={() => setStore('З\\ч склад Mazda')}>З\ч склад Mazda</NavDropdown.Item>
           </NavDropdown>
         );
     }
@@ -87,7 +92,9 @@ const Receipt = () => {
 
   return (
     <>
-      <section style={{ display: 'flex', minHeight: 'calc(100vh - 66px)', flexDirection: 'column' }} className="p-3 pb-0">
+      <section
+        style={{ display: 'flex', minHeight: 'calc(100vh - 66px)', flexDirection: 'column' }}
+        className="p-3 pb-0">
         <h4>
           Поступление товаров - С000046{receiptNumber !== null && receiptNumber + 1} от {generateDate(today)}
         </h4>
@@ -96,35 +103,35 @@ const Receipt = () => {
             <NavDropdown.Item
               onClick={() => {
                 setVendor('Аларм-моторс Озерки');
-                setWarehouse('З\\ч склад Exeed');
+                setStore('З\\ч склад Exeed');
               }}>
               Аларм-моторс Озерки
             </NavDropdown.Item>
             <NavDropdown.Item
               onClick={() => {
                 setVendor('Аларм-моторс Юго-запад');
-                setWarehouse('З\\ч склад Tank');
+                setStore('З\\ч склад Tank');
               }}>
               Аларм-моторс Юго-запад
             </NavDropdown.Item>
             <NavDropdown.Item
               onClick={() => {
                 setVendor('Аларм-моторс Лахта');
-                setWarehouse('З\\ч склад Geely');
+                setStore('З\\ч склад Geely');
               }}>
               Аларм-моторс Лахта
             </NavDropdown.Item>
             <NavDropdown.Item
               onClick={() => {
                 setVendor('Аларм-Комтранс');
-                setWarehouse('З\\ч склад Mazda');
+                setStore('З\\ч склад Mazda');
               }}>
               Аларм-Комтранс
             </NavDropdown.Item>
           </NavDropdown>
         </h5>
         <h6 style={{ maxWidth: '150px' }} className="mt-3">
-          {generateWarehouses(vendor)}
+          {generatestores(vendor)}
         </h6>
         <Container className="mt-5" fluid>
           <Row>
@@ -152,9 +159,9 @@ const Receipt = () => {
             <Col xs={2}>
               <Form.Control
                 onChange={(event) => {
-                  setDocumentInput(event.target.value);
+                  setDocument(event.target.value);
                 }}
-                value={documentInput}
+                value={document}
                 size="sm"
                 type="text"
               />
@@ -164,9 +171,9 @@ const Receipt = () => {
                 от{' '}
                 <input
                   onChange={(event) => {
-                    setDocumentDate(event.target.value);
+                    setDate(event.target.value);
                   }}
-                  value={documentDate}
+                  value={date}
                   className={styles.date}
                   type="date"
                   name="calendar"
@@ -180,7 +187,12 @@ const Receipt = () => {
               Документ:
             </Col>
             <Col xs={2}>
-              <Form.Control value={receiptType === ReceiptType.NEW ? contract : receipt.contract} size="sm" type="text" disabled />
+              <Form.Control
+                value={receiptType === ReceiptType.NEW ? contract : receipt.contract}
+                size="sm"
+                type="text"
+                disabled
+              />
             </Col>
             <Col xs={1}>
               <Button
@@ -196,9 +208,9 @@ const Receipt = () => {
             <Col xs={2}>
               <Form.Control
                 onChange={(event) => {
-                  setInvoiceInput(event.target.value);
+                  setInvoice(event.target.value);
                 }}
-                value={invoiceInput}
+                value={invoice}
                 size="sm"
                 type="text"
               />
@@ -208,9 +220,9 @@ const Receipt = () => {
                 от{' '}
                 <input
                   onChange={(event) => {
-                    setDocumentDate(event.target.value);
+                    setDate(event.target.value);
                   }}
-                  value={documentDate}
+                  value={date}
                   className={styles.date}
                   type="date"
                   name="calendar"
@@ -284,7 +296,23 @@ const Receipt = () => {
           <tbody>{productsList}</tbody>
         </Table>
         <div style={{ marginTop: 'auto', marginLeft: 'auto' }}>
-          <Button variant="primary">Сохранить</Button>
+          <Button
+            onClick={() => {
+              console.log({
+                vendor,
+                store,
+                provider,
+                contract,
+                document,
+                date,
+                invoice,
+                vat,
+                products,
+              });
+            }}
+            variant="primary">
+            Сохранить
+          </Button>
           <Button style={{ marginLeft: '8px' }} variant="primary">
             Закрыть
           </Button>

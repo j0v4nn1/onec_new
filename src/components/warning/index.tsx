@@ -1,4 +1,6 @@
-const Warning = () => {
-  return <h2>Вы точно хотите удалить товар?</h2>;
+import { Props } from './index.types';
+
+const Warning = ({ text }: Props) => {
+  return <h2>{text}</h2>;
 };
 export default Warning;
