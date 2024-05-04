@@ -20,6 +20,9 @@ const users = createSlice({
     addNewUser: (state, action: PayloadAction<UserWithTokens>) => {
       state.users.push(action.payload);
     },
+    removeUser: (state, action: PayloadAction<string>) => {
+      state.users = state.users.filter((user) => user._id !== action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getUsersThunk.pending, (state) => {
@@ -44,6 +47,6 @@ const users = createSlice({
 
 const { reducer, actions } = users;
 
-export const { addNewUser } = actions;
+export const { addNewUser, removeUser } = actions;
 
 export default reducer;

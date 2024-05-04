@@ -115,8 +115,8 @@ const ModalSwitch = () => {
           return console.log('error');
         }
         sendUserData({ name, email, role, password, passport }).then(
-          (data: { status: string; user: UserWithTokens }) => {
-            dispatch(addNewUser(data.user));
+          (data: { status: string; data: UserWithTokens }) => {
+            dispatch(addNewUser(data.data));
             dispatch(resetFormData());
             dispatch(closeModal());
           }

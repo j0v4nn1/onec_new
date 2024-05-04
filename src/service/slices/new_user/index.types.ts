@@ -9,6 +9,7 @@ export type User = {
 };
 
 export type AuthUserState = Omit<User, 'role' | 'password'> & {
+  _id: string;
   accessToken: string;
   role: Role | null;
 };

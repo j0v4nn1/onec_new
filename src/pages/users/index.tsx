@@ -4,28 +4,44 @@ import { openModal } from '../../service/slices/modal';
 import { ModalType } from '../../service/slices/modal/index.types';
 import ModalSwitch from '../../components/modal_switch';
 import Form from 'react-bootstrap/Form';
-import { useEffect } from 'react';
-import { getUsersThunk } from '../../service/slices/users';
+import { useEffect, useState } from 'react';
+import { getUsersThunk, removeUser } from '../../service/slices/users';
 import Spinner from 'react-bootstrap/Spinner';
+import { deleteUserInDb } from '../../utils/api';
 
 export default function Users() {
   const dispatch = useAppDispatch();
   const { users, loading } = useAppSelector((store) => store.users);
+  const [activeItem, setActiveItem] = useState('');
+  const [isActiveItem, setIsActiveItem] = useState(false);
 
   useEffect(() => {
     dispatch(getUsersThunk());
   }, []);
 
-  const userList = users.map(({ _id, name, passport, role, email }) => {
+  const handleRemoveUser = () => {
+    deleteUserInDb(activeItem, dispatch);
+  };
+
+  const userList = users.map((user) => {
     return (
-      <tr key={_id} onClick={() => {}}>
+      <tr
+        key={user._id}
+        onClick={() => {
+          setActiveItem(user._id);
+          setIsActiveItem(true);
+        }}>
         <td style={{ cursor: 'pointer' }}>
-          <Form.Check type="radio" name="receipt" readOnly></Form.Check>
+          <Form.Check
+            checked={activeItem === user._id}
+            type="radio"
+            name="user"
+            readOnly></Form.Check>
         </td>
-        <td style={{ cursor: 'pointer' }}>{name}</td>
-        <td style={{ cursor: 'pointer' }}>{role}</td>
-        <td style={{ cursor: 'pointer' }}>{email}</td>
-        <td style={{ cursor: 'pointer' }}>{passport}</td>
+        <td style={{ cursor: 'pointer' }}>{user.name}</td>
+        <td style={{ cursor: 'pointer' }}>{user.role}</td>
+        <td style={{ cursor: 'pointer' }}>{user.email}</td>
+        <td style={{ cursor: 'pointer' }}>{user.passport}</td>
       </tr>
     );
   });
@@ -53,8 +69,10 @@ export default function Users() {
                   }}>
                   Добавить
                 </Nav.Link>
-                <Nav.Link>Удалить</Nav.Link>
-                <Nav.Link>Изменить</Nav.Link>
+                <Nav.Link onClick={handleRemoveUser} disabled={!isActiveItem}>
+                  Удалить
+                </Nav.Link>
+                <Nav.Link disabled={!isActiveItem}>Изменить</Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </Container>

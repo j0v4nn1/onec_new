@@ -4,6 +4,7 @@ import { UserWithTokens } from '../users/index.types';
 import { Role } from '../../../components/navbar/index.types';
 
 const initialState: AuthUserState = {
+  _id: '',
   accessToken: '',
   name: '',
   email: '',
@@ -16,6 +17,7 @@ const user = createSlice({
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<UserWithTokens>) => {
+      state._id = action.payload._id;
       state.accessToken = action.payload.accessToken;
       state.name = action.payload.name;
       state.email = action.payload.email;
