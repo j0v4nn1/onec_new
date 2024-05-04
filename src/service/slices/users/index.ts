@@ -28,10 +28,10 @@ const users = createSlice({
     });
     builder.addCase(
       getUsersThunk.fulfilled,
-      (state, action: PayloadAction<{ status: string; users: UserWithTokens[] }>) => {
+      (state, action: PayloadAction<{ status: string; data: UserWithTokens[] }>) => {
         state.loading = false;
         state.request = false;
-        state.users = action.payload.users;
+        state.users = action.payload.data;
       }
     );
     builder.addCase(getUsersThunk.rejected, (state) => {

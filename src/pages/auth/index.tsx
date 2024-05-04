@@ -4,11 +4,16 @@ import Form from 'react-bootstrap/Form';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../service/store/index.types';
 import { getUsersThunk } from '../../service/slices/users';
+import { loginUser } from '../../utils/api';
+import { setUser } from '../../service/slices/user';
+import { useNavigate } from 'react-router-dom';
+import { Role } from '../../components/navbar/index.types';
 
 const Auth = () => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { users } = useAppSelector((store) => store.users);
 
   useEffect(() => {
@@ -22,6 +27,37 @@ const Auth = () => {
       </option>
     );
   });
+
+  const navigator = (role: string) => {
+    switch (role) {
+      case Role.USER:
+        navigate('/receipts');
+        break;
+      case Role.ADMIN:
+        navigate('/users');
+        break;
+      case Role.SUPER_USER:
+        navigate('/receipts');
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleLogin = () => {
+    const user = users.find((user) => user.name === login);
+    user &&
+      loginUser({ _id: user._id, password })
+        .then(({ data }) => {
+          if (data.status === 'success') {
+            dispatch(setUser(data.data));
+            navigator(data.data.role);
+          } else if (data.status === 'success') {
+            throw new Error();
+          }
+        })
+        .catch((err) => console.log(err));
+  };
 
   return (
     <>
@@ -54,7 +90,7 @@ const Auth = () => {
             содержать пробелов, специальных символов или эмодзи.
           </Form.Text>
         </Form.Group>
-        <Button>Войти</Button>
+        <Button onClick={handleLogin}>Войти</Button>
       </Form>
     </>
   );

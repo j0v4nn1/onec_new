@@ -1,22 +1,45 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuthUserState } from '../new_user/index.types';
-import { Role } from 'components/navbar/index.types';
+import { UserWithTokens } from '../users/index.types';
+import { Role } from '../../../components/navbar/index.types';
 
 const initialState: AuthUserState = {
   accessToken: '',
   name: '',
   email: '',
-  password: '',
   passport: '',
-  role: Role.ADMIN,
+  role: null,
 };
 
 const user = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setUser: (state, action: PayloadAction<UserWithTokens>) => {
+      state.accessToken = action.payload.accessToken;
+      state.name = action.payload.name;
+      state.email = action.payload.email;
+      state.passport = action.payload.passport;
+      switch (action.payload.role) {
+        case 'admin':
+          state.role = Role.ADMIN;
+          break;
+        case 'user':
+          state.role = Role.USER;
+          break;
+        case 'superuser':
+          state.role = Role.SUPER_USER;
+          break;
+        default:
+          state.role = state.role;
+          break;
+      }
+    },
+  },
 });
 
-const { reducer } = user;
+const { reducer, actions } = user;
+
+export const { setUser } = actions;
 
 export default reducer;

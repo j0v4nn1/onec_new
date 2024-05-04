@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:8080/api';
+export const BASE_URL = 'http://localhost:8080/api/';
 export const REGEX_NUMBER = /^[0-9]+(\.[0-9]+)?$/;
 export const REGEX_COUNTRY =
   /^(?:Китай|Германия|Япония|США|Корея|Турция|Италия|Франция|Беларусь|Украина)$/;
