@@ -1,12 +1,12 @@
 import { TNomenclatureProduct } from '../receipts/index.types';
 export enum ModalType {
-  Provider = 'Provider',
-  Product = 'Product',
-  Auth = 'Auth',
-  Contract = 'Contract',
-  ProductDetail = 'ProductDetail',
-  Warning = 'Warning',
-  Saving = 'Saving',
+  PROVIDER = 'provider',
+  PRODUCT = 'product',
+  USER = 'user',
+  CONTRACT = 'contract',
+  PRODUCT_DETAILS = 'details',
+  WARNING = 'warning',
+  SAVING = 'saving',
 }
 
 export type TAction = { payload: TNomenclatureProduct; type: string } | null;

@@ -3,12 +3,12 @@ import { getReceipts, setReceiptId, setReceiptType } from '../../service/slices/
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'service/store/index.types';
 import Spinner from 'react-bootstrap/Spinner';
-import styles from '../../pages/receipts/index.module.css';
+import styles from './/index.module.css';
 import Form from 'react-bootstrap/Form';
 import { NavLink } from 'react-router-dom';
 import { ReceiptType } from '../../service/slices/receipts/index.types';
 
-const Receipts = () => {
+const ReceiptList = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -110,4 +110,4 @@ const Receipts = () => {
   );
 };
 
-export default Receipts;
+export default ReceiptList;

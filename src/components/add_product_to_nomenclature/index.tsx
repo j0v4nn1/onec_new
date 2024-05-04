@@ -3,7 +3,7 @@ import { Props } from './index.types';
 import { useState } from 'react';
 import { addBrand, addProduct } from 'utils';
 import Alert from 'components/alert';
-import BrandsList from 'components/brandsList';
+import BrandsList from 'components/brand_list';
 
 const AddProductToNomenclature = ({ isOpenModal, setIsOpenModal }: Props) => {
   const [sku, setSku] = useState('');

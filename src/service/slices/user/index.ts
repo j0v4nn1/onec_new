@@ -1,37 +1,22 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../new_user/index.types';
+import { createSlice } from '@reduxjs/toolkit';
+import { AuthUserState } from '../new_user/index.types';
+import { Role } from 'components/navbar/index.types';
 
-const initialState: User = {
+const initialState: AuthUserState = {
+  accessToken: '',
   name: '',
   email: '',
   password: '',
   passport: '',
-  role: '',
+  role: Role.ADMIN,
 };
 
-const users = createSlice({
-  name: 'users',
+const user = createSlice({
+  name: 'user',
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(getUsersThunk.pending, (state) => {
-      state.loading = true;
-      state.request = true;
-    });
-    builder.addCase(
-      getUsersThunk.fulfilled,
-      (state, action: PayloadAction<{ status: string; users: UserWithId[] }>) => {
-        state.loading = false;
-        state.request = false;
-        state.users = action.payload.users;
-      }
-    );
-    builder.addCase(getUsersThunk.rejected, (state) => {
-      state.loading = false;
-      state.failed = true;
-      state.request = false;
-    });
-  },
 });
 
-export default users.reducer;
+const { reducer } = user;
+
+export default reducer;

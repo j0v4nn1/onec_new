@@ -1,5 +1,5 @@
 import { jsonDataReceipts } from 'service/slices/receipts/index.types';
-import { API } from '../constants';
+import { BASE_URL } from '../constants';
 
 const checkResponse = (response: Response | Response[]) => {
   if (Array.isArray(response)) {
@@ -19,7 +19,7 @@ const checkResponse = (response: Response | Response[]) => {
 };
 
 export const fetchReceipts = async (): Promise<jsonDataReceipts> => {
-  const data = await fetch(`${API}/receipts`);
+  const data = await fetch(`${BASE_URL}/receipts`);
   return checkResponse(data);
 };
 
@@ -33,14 +33,17 @@ export const generateDate = (today: Date) => {
 };
 
 export const getAllData = async () => {
-  const providers = await fetch(`${API}/providers`);
-  const brands = await fetch(`${API}/brands`);
-  const products = await fetch(`${API}/products`);
+  const providers = await fetch(`${BASE_URL}/providers`);
+  const brands = await fetch(`${BASE_URL}/brands`);
+  const products = await fetch(`${BASE_URL}/products`);
   return checkResponse([providers, brands, products]);
 };
 
-export const addContractToProvider = async (id: string, contract: { _id: string; name: string }) => {
-  const data = await fetch(`${API}/providers/${id}`, {
+export const addContractToProvider = async (
+  id: string,
+  contract: { _id: string; name: string }
+) => {
+  const data = await fetch(`${BASE_URL}/providers/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(contract),
     headers: {
@@ -50,8 +53,13 @@ export const addContractToProvider = async (id: string, contract: { _id: string;
   return checkResponse(data);
 };
 
-export const addProduct = async (product: { sku: string; name: string; brand: string; unit: string }) => {
-  const data = await fetch(`${API}/products`, {
+export const addProduct = async (product: {
+  sku: string;
+  name: string;
+  brand: string;
+  unit: string;
+}) => {
+  const data = await fetch(`${BASE_URL}/products`, {
     method: 'POST',
     body: JSON.stringify(product),
     headers: {
@@ -62,7 +70,7 @@ export const addProduct = async (product: { sku: string; name: string; brand: st
 };
 
 export const addBrand = async (brand: string) => {
-  const data = await fetch(`${API}/brands`, {
+  const data = await fetch(`${BASE_URL}/brands`, {
     method: 'POST',
     body: JSON.stringify({ name: brand }),
     headers: {
@@ -72,27 +80,21 @@ export const addBrand = async (brand: string) => {
   return checkResponse(data);
 };
 
-// export const generateVendor = (store: string) => {
-//   switch (store) {
-//     case 'З\\ч склад Exeed':
-//       return 'Аларм-моторс Озерки';
-//     case 'З\\ч склад Jaecoo':
-//       return 'Аларм-моторс Озерки';
-//     case 'З\\ч склад Omoda':
-//       return 'Аларм-моторс Озерки';
-//     case 'З\\ч склад Ford':
-//       return 'Аларм-моторс Озерки';
-//     case 'З\\ч склад Tank':
-//       return 'Аларм-моторс Юго-запад';
-//     case 'З\\ч склад Geely':
-//       return 'Аларм-моторс Лахта';
-//     case 'З\\ч склад Faw':
-//       return 'Аларм-моторс Лахта';
-//     case 'З\\ч склад Sollers':
-//       return 'Аларм-моторс Лахта';
-//     case 'З\\ч склад Mazda':
-//       return 'Аларм-Комтранс';
-//     default:
-//       return 'Ошибка';
-//   }
-// };
+export const generatePassword = (options?: { length: number }): string => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  const nums = '0123456789';
+  const passwordLength = options ? options.length : 4;
+  const generateRandomChar = () => {
+    return chars[Math.floor(Math.random() * chars.length)];
+  };
+  const generateRandomNum = () => {
+    return nums[Math.floor(Math.random() * nums.length)];
+  };
+  let password = '';
+  let passwordNums = '';
+  for (let i = 0; i < passwordLength; i++) {
+    password += generateRandomChar();
+    passwordNums += generateRandomNum();
+  }
+  return password + passwordNums;
+};

@@ -2,18 +2,41 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
+import { Navbar as NavbarBootstrap } from 'react-bootstrap';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { NavLink } from 'react-router-dom';
+import { NavbarProps, Role } from './index.types';
 
-function NavBarReact() {
-  return (
-    <Navbar expand="lg" className="bg-body-tertiary">
-      <Container fluid>
-        <Navbar.Brand href="#">Сфера.Склад</Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbarScroll" />
-        <Navbar.Collapse id="navbarScroll">
-          <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
+export default function Navbar({ role }: NavbarProps) {
+  const navbarBrand = () => {
+    switch (role) {
+      case Role.ADMIN:
+        return 'Cфера.Админ';
+      case Role.USER:
+        return 'Cфера.Склад';
+      case Role.SUPER_USER:
+        return 'Cфера.Склад(Расширенный)';
+      default:
+        return 'Cфера.Вход';
+    }
+  };
+
+  const navbarLinks = () => {
+    switch (role) {
+      case Role.ADMIN:
+        return (
+          <NavLink
+            className="nav-link"
+            to="users"
+            style={({ isActive }) => {
+              return { fontWeight: isActive ? 'bold' : '' };
+            }}>
+            Пользователи
+          </NavLink>
+        );
+      case Role.USER:
+        return (
+          <>
             <NavLink
               className="nav-link"
               to="receipts"
@@ -22,9 +45,6 @@ function NavBarReact() {
               }}>
               Поступления
             </NavLink>
-            {/*<NavLink className="nav-link" to="#action2">*/}
-            {/*  Перемещения*/}
-            {/*</NavLink>*/}
             <NavLink
               className="nav-link"
               to="/nomenclature"
@@ -41,9 +61,6 @@ function NavBarReact() {
               to="/orders">
               Журнал заказ-нарядов
             </NavLink>
-            {/*<NavLink className="nav-link" to="#">*/}
-            {/*  Счета*/}
-            {/*</NavLink>*/}
             <NavDropdown title="Оперативные" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3">Материальная ведомость</NavDropdown.Item>
               <NavDropdown.Item href="#action4">Отчёты</NavDropdown.Item>
@@ -51,15 +68,34 @@ function NavBarReact() {
               <NavDropdown.Divider />
               <NavDropdown.Item href="#action5">Печать реестров документов</NavDropdown.Item>
             </NavDropdown>
+          </>
+        );
+      case Role.SUPER_USER:
+        return <></>;
+      default:
+        return <></>;
+    }
+  };
+
+  const isShowenSearchBar = role ? (
+    <Form className="d-flex">
+      <Form.Control type="search" placeholder="Поиск" className="me-2" aria-label="Search" />
+      <Button variant="outline-success">Найти</Button>
+    </Form>
+  ) : null;
+
+  return (
+    <NavbarBootstrap expand="lg" className="bg-body-tertiary">
+      <Container fluid>
+        <NavbarBootstrap.Brand href="#">{navbarBrand()}</NavbarBootstrap.Brand>
+        <NavbarBootstrap.Toggle aria-controls="navbarScroll" />
+        <NavbarBootstrap.Collapse id="navbarScroll">
+          <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
+            {navbarLinks()}
           </Nav>
-          <Form className="d-flex">
-            <Form.Control type="search" placeholder="Поиск" className="me-2" aria-label="Search" />
-            <Button variant="outline-success">Найти</Button>
-          </Form>
-        </Navbar.Collapse>
+          {isShowenSearchBar}
+        </NavbarBootstrap.Collapse>
       </Container>
-    </Navbar>
+    </NavbarBootstrap>
   );
 }
-
-export default NavBarReact;

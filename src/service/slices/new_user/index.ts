@@ -11,8 +11,8 @@ const initialState: User = {
   role: Role.USER,
 };
 
-const user = createSlice({
-  name: 'user',
+const newUser = createSlice({
+  name: 'newUser',
   initialState,
   reducers: {
     setFormData: (state, action: PayloadAction<Payload<typeof initialState>>) => {
@@ -29,7 +29,7 @@ const user = createSlice({
   },
 });
 
-const { reducer, actions } = user;
+const { reducer, actions } = newUser;
 
 export const { setFormData, resetFormData } = actions;
 

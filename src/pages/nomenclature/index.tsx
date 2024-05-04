@@ -1,7 +1,7 @@
 import { Container, Nav, Navbar, Table } from 'react-bootstrap';
 import { nomenclature as parts } from '../../data';
 import { useState } from 'react';
-import AddProductToNomenclature from 'components/addProductToNomenclature';
+import AddProductToNomenclature from 'components/add_product_to_nomenclature';
 
 const Nomenclature = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);

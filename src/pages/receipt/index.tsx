@@ -1,12 +1,26 @@
-import { Button, Col, Container, Form, Nav, Navbar, NavDropdown, Row, Table } from 'react-bootstrap';
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  Nav,
+  Navbar,
+  NavDropdown,
+  Row,
+  Table,
+} from 'react-bootstrap';
 import { useAppDispatch, useAppSelector } from 'service/store/index.types';
 import { useState } from 'react';
 import styles from './index.module.css';
 import { generateDate } from '../../utils';
-import { ReceiptType, TNomenclatureProduct, TReceipt } from '../../service/slices/receipts/index.types';
+import {
+  ReceiptType,
+  TNomenclatureProduct,
+  TReceipt,
+} from '../../service/slices/receipts/index.types';
 import { openModal, setAction } from '../../service/slices/modal';
 import { ModalType } from '../../service/slices/modal/index.types';
-import ModalSwitch from '../../components/modalSwitch';
+import ModalSwitch from '../../components/modal_switch';
 import { deleteProduct } from '../../service/slices/receipts';
 
 const Receipt = () => {
@@ -18,8 +32,12 @@ const Receipt = () => {
   const { products } = useAppSelector((state) => state.receipts.newReceipt);
   const today = new Date();
 
-  const [vendor, setVendor] = useState(receiptType === ReceiptType.NEW ? 'Аларм-моторс Озерки' : receipt.vendor);
-  const [store, setStore] = useState(receiptType === ReceiptType.NEW ? 'Выберите склад' : receipt.store);
+  const [vendor, setVendor] = useState(
+    receiptType === ReceiptType.NEW ? 'Аларм-моторс Озерки' : receipt.vendor
+  );
+  const [store, setStore] = useState(
+    receiptType === ReceiptType.NEW ? 'Выберите склад' : receipt.store
+  );
   const [document, setDocument] = useState(receiptType === ReceiptType.NEW ? '' : receipt.document);
   const [invoice, setInvoice] = useState(receiptType === ReceiptType.NEW ? '' : receipt.invoice);
   const [date, setDate] = useState(receiptType === ReceiptType.NEW ? '' : receipt.docdate);
@@ -49,7 +67,9 @@ const Receipt = () => {
         <td>{product.price}</td>
         <td>{(product.price * product.amount).toFixed(2)}</td>
         <td>{(product.price * product.amount * vat).toFixed(2)}</td>
-        <td>{(product.price * product.amount + product.price * product.amount * vat).toFixed(2)}</td>
+        <td>
+          {(product.price * product.amount + product.price * product.amount * vat).toFixed(2)}
+        </td>
         <td>{product.country}</td>
         <td>{product.customDeclaration}</td>
         <td>{product.location}</td>
@@ -62,29 +82,45 @@ const Receipt = () => {
       case 'Аларм-моторс Озерки':
         return (
           <NavDropdown title={store} menuVariant="dark">
-            <NavDropdown.Item onClick={() => setStore('З\\ч склад Exeed')}>З\ч склад Exeed</NavDropdown.Item>
-            <NavDropdown.Item onClick={() => setStore('З\\ч склад Omoda')}>З\ч склад Omoda</NavDropdown.Item>
-            <NavDropdown.Item onClick={() => setStore('З\\ч склад Ford')}>З\ч склад Ford</NavDropdown.Item>
+            <NavDropdown.Item onClick={() => setStore('З\\ч склад Exeed')}>
+              З\ч склад Exeed
+            </NavDropdown.Item>
+            <NavDropdown.Item onClick={() => setStore('З\\ч склад Omoda')}>
+              З\ч склад Omoda
+            </NavDropdown.Item>
+            <NavDropdown.Item onClick={() => setStore('З\\ч склад Ford')}>
+              З\ч склад Ford
+            </NavDropdown.Item>
           </NavDropdown>
         );
       case 'Аларм-моторс Юго-запад':
         return (
           <NavDropdown title={store} menuVariant="dark">
-            <NavDropdown.Item onClick={() => setStore('З\\ч склад Tank')}>З\ч склад Tank</NavDropdown.Item>
+            <NavDropdown.Item onClick={() => setStore('З\\ч склад Tank')}>
+              З\ч склад Tank
+            </NavDropdown.Item>
           </NavDropdown>
         );
       case 'Аларм-моторс Лахта':
         return (
           <NavDropdown title={store} menuVariant="dark">
-            <NavDropdown.Item onClick={() => setStore('З\\ч склад Geely')}>З\ч склад Geely</NavDropdown.Item>
-            <NavDropdown.Item onClick={() => setStore('З\\ч склад Faw')}>З\ч склад Faw</NavDropdown.Item>
-            <NavDropdown.Item onClick={() => setStore('З\\ч склад Sollers')}>З\ч склад Sollers</NavDropdown.Item>
+            <NavDropdown.Item onClick={() => setStore('З\\ч склад Geely')}>
+              З\ч склад Geely
+            </NavDropdown.Item>
+            <NavDropdown.Item onClick={() => setStore('З\\ч склад Faw')}>
+              З\ч склад Faw
+            </NavDropdown.Item>
+            <NavDropdown.Item onClick={() => setStore('З\\ч склад Sollers')}>
+              З\ч склад Sollers
+            </NavDropdown.Item>
           </NavDropdown>
         );
       case 'Аларм-Комтранс':
         return (
           <NavDropdown title={store} menuVariant="dark">
-            <NavDropdown.Item onClick={() => setStore('З\\ч склад Mazda')}>З\ч склад Mazda</NavDropdown.Item>
+            <NavDropdown.Item onClick={() => setStore('З\\ч склад Mazda')}>
+              З\ч склад Mazda
+            </NavDropdown.Item>
           </NavDropdown>
         );
     }
@@ -96,7 +132,8 @@ const Receipt = () => {
         style={{ display: 'flex', minHeight: 'calc(100vh - 66px)', flexDirection: 'column' }}
         className="p-3 pb-0">
         <h4>
-          Поступление товаров - С000046{receiptNumber !== null && receiptNumber + 1} от {generateDate(today)}
+          Поступление товаров - С000046{receiptNumber !== null && receiptNumber + 1} от{' '}
+          {generateDate(today)}
         </h4>
         <h5 style={{ maxWidth: '250px' }}>
           <NavDropdown title={vendor} menuVariant="dark">
@@ -149,7 +186,7 @@ const Receipt = () => {
             <Col xs={1}>
               <Button
                 onClick={() => {
-                  dispatch(openModal(ModalType.Provider));
+                  dispatch(openModal(ModalType.PROVIDER));
                 }}
                 size="sm">
                 Выбрать
@@ -197,7 +234,7 @@ const Receipt = () => {
             <Col xs={1}>
               <Button
                 onClick={() => {
-                  dispatch(openModal(ModalType.Contract));
+                  dispatch(openModal(ModalType.CONTRACT));
                 }}
                 disabled={provider.name === ''}
                 size="sm">
@@ -254,13 +291,13 @@ const Receipt = () => {
               <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
                 <Nav.Link
                   onClick={() => {
-                    dispatch(openModal(ModalType.Product));
+                    dispatch(openModal(ModalType.PRODUCT));
                   }}>
                   Добавить
                 </Nav.Link>
                 <Nav.Link
                   onClick={() => {
-                    dispatch(openModal(ModalType.Warning));
+                    dispatch(openModal(ModalType.WARNING));
                     activeProduct && dispatch(setAction(deleteProduct(activeProduct)));
                   }}
                   disabled={!activeProduct}>
@@ -268,7 +305,7 @@ const Receipt = () => {
                 </Nav.Link>
                 <Nav.Link
                   onClick={() => {
-                    dispatch(openModal(ModalType.ProductDetail));
+                    dispatch(openModal(ModalType.PRODUCT_DETAILS));
                   }}
                   disabled={!activeProduct}>
                   Изменить

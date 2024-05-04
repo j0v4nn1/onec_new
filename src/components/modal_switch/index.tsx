@@ -1,7 +1,7 @@
 import { ModalType } from '../../service/slices/modal/index.types';
 import Modal from '../modal';
-import ProviderList from '../providerList';
-import ContractList from '../contractList';
+import ProviderList from '../provider_list';
+import ContractList from '../contract_list';
 import { useDispatch } from 'react-redux';
 import {
   setActiveProvider,
@@ -12,17 +12,26 @@ import {
 } from '../../service/slices/receipts';
 import { useAppSelector } from '../../service/store/index.types';
 import { closeModal } from '../../service/slices/modal';
-import ProductList from '../productList';
+import ProductList from '../product_list';
 import { v4 as uuidv4 } from 'uuid';
-import { TProduct } from '../../service/slices/general/index.types';
-import ProductDetails from '../productDetails';
+import ProductDetails from '../product_details';
 import Warning from '../warning';
 import { TNomenclatureProduct } from 'service/slices/receipts/index.types';
+import UserCreate from '../user_create';
+import { sendUserData } from '../../utils/api';
+import { resetFormData } from '../../service/slices/new_user';
+import { UserWithTokens } from 'service/slices/users/index.types';
+import { addNewUser } from 'service/slices/users';
 
 const ModalSwitch = () => {
   const { provider, contract } = useAppSelector((store) => store.receipts.newReceipt.temporaryData);
-  const { activeProduct } = useAppSelector((store) => store.receipts.newReceipt.temporaryData.product);
-  const { productDetails } = useAppSelector((store) => store.receipts.newReceipt.temporaryData.product);
+  const { activeProduct } = useAppSelector(
+    (store) => store.receipts.newReceipt.temporaryData.product
+  );
+  const { name, email, role, password, passport } = useAppSelector((store) => store.newUser);
+  const { productDetails } = useAppSelector(
+    (store) => store.receipts.newReceipt.temporaryData.product
+  );
   const { type } = useAppSelector((state) => state.modal);
   const { products } = useAppSelector((state) => state.general);
   const dispatch = useDispatch();
@@ -30,9 +39,8 @@ const ModalSwitch = () => {
     (product) => activeProduct && activeProduct.uniqueListId === product.uniqueListId
   ) as TNomenclatureProduct;
   const deleteProductAction = useAppSelector((state) => state.modal.action);
-  return type === ModalType.Provider ? (
+  return type === ModalType.PROVIDER ? (
     <Modal
-      actionButtonText="Выбрать"
       action={() => {
         provider.activeProvider && dispatch(setProvider(provider.activeProvider));
         dispatch(closeModal());
@@ -41,9 +49,8 @@ const ModalSwitch = () => {
       title={'Выбрать поставщика'}>
       <ProviderList />
     </Modal>
-  ) : type === ModalType.Contract ? (
+  ) : type === ModalType.CONTRACT ? (
     <Modal
-      actionButtonText="Выбрать"
       action={() => {
         contract.activeContract && dispatch(setContract(contract.activeContract.name));
         dispatch(closeModal());
@@ -51,9 +58,8 @@ const ModalSwitch = () => {
       title={'Выбрать документ'}>
       <ContractList />
     </Modal>
-  ) : type === ModalType.Product ? (
+  ) : type === ModalType.PRODUCT ? (
     <Modal
-      actionButtonText="Выбрать"
       title={'Выбрать товар'}
       action={() => {
         const uniqueListId = uuidv4();
@@ -71,7 +77,7 @@ const ModalSwitch = () => {
       }}>
       <ProductList />
     </Modal>
-  ) : type === ModalType.ProductDetail ? (
+  ) : type === ModalType.PRODUCT_DETAILS ? (
     <Modal
       title={`Внесите данные для товара: ${product.name}`}
       action={() => {
@@ -87,7 +93,7 @@ const ModalSwitch = () => {
       actionButtonText="Сохранить">
       <ProductDetails />
     </Modal>
-  ) : type === ModalType.Warning ? (
+  ) : type === ModalType.WARNING ? (
     <Modal
       title={`Удаление`}
       action={() => {
@@ -97,9 +103,27 @@ const ModalSwitch = () => {
       actionButtonText="Да">
       <Warning text={'Вы точно хотите удалить товар?'} />
     </Modal>
-  ) : type === ModalType.Saving ? (
+  ) : type === ModalType.SAVING ? (
     <Modal title={`Сохранение`} action={() => {}} actionButtonText="Да">
       <Warning text={'Вы точно хотите провести поступление'} />
+    </Modal>
+  ) : type === ModalType.USER ? (
+    <Modal
+      title={`Добавьте пользователя`}
+      action={() => {
+        if (!role) {
+          return console.log('error');
+        }
+        sendUserData({ name, email, role, password, passport }).then(
+          (data: { status: string; user: UserWithTokens }) => {
+            dispatch(addNewUser(data.user));
+            dispatch(resetFormData());
+            dispatch(closeModal());
+          }
+        );
+      }}
+      actionButtonText={'Создать'}>
+      <UserCreate />
     </Modal>
   ) : null;
 };

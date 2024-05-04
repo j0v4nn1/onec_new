@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { TBrand, InitialState, TProduct, TProvider } from './index.types';
 import { getAllData } from '../../../utils/';
+import { Role } from '../../../components/navbar/index.types';
 
 export const getData = createAsyncThunk('data/getData', async () => {
   return await getAllData();
@@ -13,6 +14,7 @@ const initialState: InitialState = {
   providers: [],
   brands: [],
   products: [],
+  role: Role.ADMIN,
   error: undefined,
 };
 
@@ -32,7 +34,12 @@ const general = createSlice({
     });
     builder.addCase(
       getData.fulfilled,
-      (state, action: PayloadAction<[{ providers: TProvider[] }, { brands: TBrand[] }, { products: TProduct[] }]>) => {
+      (
+        state,
+        action: PayloadAction<
+          [{ providers: TProvider[] }, { brands: TBrand[] }, { products: TProduct[] }]
+        >
+      ) => {
         const { providers } = action.payload[0];
         const { brands } = action.payload[1];
         const { products } = action.payload[2];

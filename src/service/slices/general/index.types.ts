@@ -1,3 +1,5 @@
+import { Role } from '../../../components/navbar/index.types';
+
 export type TContract = {
   _id: string;
   name: string;
@@ -33,5 +35,6 @@ export type InitialState = {
   providers: TProvider[];
   brands: TBrand[];
   products: TProduct[];
+  role: Role;
   error: string | undefined;
 };

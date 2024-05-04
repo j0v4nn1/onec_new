@@ -1,23 +1,49 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { getUsers } from '../../../utils/api';
+import { UsersState, UserWithTokens } from './index.types';
 
-const getUsersThunk = createAsyncThunk('auth/getUsers', async () => {
+export const getUsersThunk = createAsyncThunk('users/getUsers', async () => {
   return await getUsers();
 });
 
-const initialState = {
-  name: '',
-  email: '',
-  role: '',
+const initialState: UsersState = {
+  request: false,
+  loading: false,
+  failed: false,
+  users: [],
 };
 
-const auth = createSlice({
-  name: 'auth',
+const users = createSlice({
+  name: 'users',
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {},
+  reducers: {
+    addNewUser: (state, action: PayloadAction<UserWithTokens>) => {
+      state.users.push(action.payload);
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getUsersThunk.pending, (state) => {
+      state.loading = true;
+      state.request = true;
+    });
+    builder.addCase(
+      getUsersThunk.fulfilled,
+      (state, action: PayloadAction<{ status: string; users: UserWithTokens[] }>) => {
+        state.loading = false;
+        state.request = false;
+        state.users = action.payload.users;
+      }
+    );
+    builder.addCase(getUsersThunk.rejected, (state) => {
+      state.loading = false;
+      state.failed = true;
+      state.request = false;
+    });
+  },
 });
 
-const { reducer } = auth;
+const { reducer, actions } = users;
+
+export const { addNewUser } = actions;
 
 export default reducer;

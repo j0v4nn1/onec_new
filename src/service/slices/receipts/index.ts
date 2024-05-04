@@ -1,9 +1,15 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { fetchReceipts } from '../../../utils';
-import { TReceipt, TReceiptsState, ReceiptType, TNomenclatureProduct, TProductDetails } from './index.types';
+import {
+  TReceipt,
+  TReceiptsState,
+  ReceiptType,
+  TNomenclatureProduct,
+  TProductDetails,
+} from './index.types';
 import { TContract, TProduct, TProvider } from '../general/index.types';
 
-export const getReceipts = createAsyncThunk('receipts/fetchReceipts', async () => {
+export const getReceipts = createAsyncThunk('receipt_list/fetchReceipts', async () => {
   const res = await fetchReceipts();
   return res.result;
 });
@@ -97,7 +103,9 @@ const receipts = createSlice({
       state.newReceipt.temporaryData.product.productDetails = action.payload;
     },
     updateProductDetails: (state, action: PayloadAction<TNomenclatureProduct>) => {
-      const index = state.newReceipt.products.findIndex((product) => product._id === action.payload._id);
+      const index = state.newReceipt.products.findIndex(
+        (product) => product._id === action.payload._id
+      );
       state.newReceipt.products[index] = action.payload;
     },
     deleteProduct: (state, action: PayloadAction<TNomenclatureProduct>) => {
